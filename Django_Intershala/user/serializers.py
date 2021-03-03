@@ -7,12 +7,12 @@ from . import models
 
 class CoreRegisterSerializer(RegisterSerializer):
     is_admin = serializers.BooleanField(default=False)
-    is_employee = serializers.BooleanField(default=False)
-    is_customer = serializers.BooleanField(default=False)
+    is_recruiter = serializers.BooleanField(default=False)
+    is_student = serializers.BooleanField(default=False)
 
     class Meta:
         model = models.User
-        fields = ('email', 'username', 'password', 'is_admin', 'is_employee', 'is_customer', 'first_name')
+        fields = ('email', 'username', 'password', 'is_admin', 'is_recruiter', 'is_student', 'first_name')
 
     def get_cleaned_data(self):
         return {
@@ -22,8 +22,8 @@ class CoreRegisterSerializer(RegisterSerializer):
             'password1': self.validated_data.get('password1', ''),
             'password2': self.validated_data.get('password2', ''),
             'is_admin': self.validated_data.get('is_admin', ''),
-            'is_employee': self.validated_data.get('is_employee', ''),
-            'is_customer': self.validated_data.get('is_customer', ''),
+            'is_recruiter': self.validated_data.get('is_recruiter', ''),
+            'is_student': self.validated_data.get('is_student', ''),
         }
 
     def save(self, request):
@@ -31,8 +31,8 @@ class CoreRegisterSerializer(RegisterSerializer):
         user = adapter.new_user(request)
         self.cleaned_data = self.get_cleaned_data()
         user.is_admin = self.cleaned_data.get('is_admin')
-        user.is_employee = self.cleaned_data.get('is_employee')
-        user.is_customer = self.cleaned_data.get('is_customer')
+        user.is_recruiter = self.cleaned_data.get('is_recruiter')
+        user.is_student = self.cleaned_data.get('is_student')
         user.first_name = self.cleaned_data.get('first_name')
         user.save()
         adapter.save_user(request, user, self)
@@ -42,7 +42,7 @@ class CoreRegisterSerializer(RegisterSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
-        fields = ('email', 'username', 'password', 'is_admin', 'is_employee', 'is_customer', 'first_name')
+        fields = ('email', 'username', 'password', 'is_admin', 'is_recruiter', 'is_student', 'first_name')
 
 
 class ChangePasswordSerializer(serializers.Serializer):
@@ -63,11 +63,11 @@ class TokenSerializer(serializers.ModelSerializer):
             obj.user
         ).data
         is_admin = serializer_data.get('is_admin')
-        is_employee = serializer_data.get('is_employee')
-        is_customer = serializer_data.get('is_customer')
+        is_recruiter = serializer_data.get('is_recruiter')
+        is_student = serializer_data.get('is_student')
 
         return {
             'is_admin': is_admin,
-            'is_employee': is_employee,
-            'is_customer': is_customer,
+            'is_recruiter': is_recruiter,
+            'is_student': is_student,
         }
