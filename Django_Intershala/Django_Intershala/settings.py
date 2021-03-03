@@ -43,13 +43,13 @@ INSTALLED_APPS = [
     'student',
     'user',
     'rest_framework',
-    'rest_framework.authtoken',
-    'rest_auth',
-    'allauth',
-    'phone_field',
-    'allauth.account',
+    #'rest_framework.authtoken',
+    #'rest_auth',
+    #'allauth',
+    #'phone_field',
+    #'allauth.account',
     'localflavor',
-    'rest_auth.registration',
+    #'rest_auth.registration',
 ]
 
 MIDDLEWARE = [
@@ -89,7 +89,7 @@ WSGI_APPLICATION = 'Django_Intershala.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'Instershala.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
