@@ -4,9 +4,10 @@ from .serializers import *
 # Create your views here.
 from student.models import Student
 from rest_framework.response import Response
+from django.core.exceptions import ObjectDoesNotExist
 
 
-class IntershalaStudentViewSets(generics.ListAPIView):
+class IntershalaStudentViewSets(generics.ListAPIView, generics.DestroyAPIView):
     queryset = Student.objects.all().order_by('-created_at')
     serializer_class = IntershalaStudentSerializer
     permission_classes = (IsAuthenticated,)
@@ -20,3 +21,15 @@ class IntershalaStudentViewSets(generics.ListAPIView):
             return Response(serializer.data, status=200)
         else:
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
+
+    def destroy(self, request, *args, **kwargs):
+        if self.request.user.is_employee or self.request.user.is_superuser or self.request.user.is_admin:
+            try:
+                instance = self.queryset.get(id=self.kwargs["id"])
+            except ObjectDoesNotExist:
+                return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
+            instance.delete()
+            return Response({"Student Deleted": "Access Granted"}, status=200)
+        else:
+            return Response({"NO_ACCESS": "Access Denied"}, status=401)
+
