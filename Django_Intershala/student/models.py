@@ -24,10 +24,9 @@ class Student(models.Model):
     school_name = models.CharField(max_length=200)
     degree = models.CharField(max_length=100)
     date_added = models.DateField(auto_now_add=True)
-    created_at=models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return "{} {}".format(self.first_name, self.email)
-
 
 # hey samir mujhe isme resume ke liye filed daalni hei but smjh nhi araha hei ki kese daalu vo aap krdo and tell me pleasse

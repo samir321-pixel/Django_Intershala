@@ -1,11 +1,8 @@
 from rest_framework import routers
-from django.urls import path, include
+from django.urls import path
 
 from .views import *
 
-router = routers.DefaultRouter()
-router.register('student', IntershalaStudentViewSets, 'student')
-
 urlpatterns = [
-    path(r'', include(router.urls)),
+    path('student/', IntershalaStudentViewSets.as_view()),
 ]
