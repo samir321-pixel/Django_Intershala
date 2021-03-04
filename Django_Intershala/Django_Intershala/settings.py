@@ -52,6 +52,8 @@ INSTALLED_APPS = [
     'localflavor',
     'rest_auth.registration',
     'job_profile',
+    'drf_yasg',  
+
 
 ]
 
