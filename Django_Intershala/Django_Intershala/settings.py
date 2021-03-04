@@ -39,17 +39,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'recruiter',
     'student',
     'user',
     'rest_framework',
-    #'rest_framework.authtoken',
-    #'rest_auth',
-    #'allauth',
-    #'phone_field',
-    #'allauth.account',
+    'rest_framework.authtoken',
+    'rest_auth',
+    'allauth',
+    'phone_field',
+    'allauth.account',
     'localflavor',
-    #'rest_auth.registration',
+    'rest_auth.registration',
+    'job_profile',
+
 ]
 
 MIDDLEWARE = [
