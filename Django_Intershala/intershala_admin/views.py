@@ -129,7 +129,7 @@ class IntershalaJobProfileViewSets(generics.ListAPIView, generics.DestroyAPIView
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
 
 
-class IntershalaSkillViewSets(generics.ListAPIView, generics.DestroyAPIView, generics.RetrieveUpdateAPIView):
+class IntershalaSkillViewSets(generics.ListCreateAPIView, generics.DestroyAPIView, generics.RetrieveUpdateAPIView):
     queryset = Skill.objects.all().order_by('-created_at')
     serializer_class = IntershalaSkillReadSerializer
     permission_classes = (IsAuthenticated,)
@@ -147,11 +147,22 @@ class IntershalaSkillViewSets(generics.ListAPIView, generics.DestroyAPIView, gen
         else:
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
 
+    def create(self, request, *args, **kwargs):
+        if self.request.user.is_employee or self.request.user.is_superuser or self.request.user.is_admin:
+            serializer = IntershalaSkillReadSerializer(data=request.data)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save(active=True)
+                return Response(serializer.data, status=200)
+            else:
+                return Response(serializer.errors, status=400)
+        else:
+            return Response({"NO_ACCESS": "Access Denied"}, status=401)
+
     def retrieve(self, request, *args, **kwargs):
         if self.request.user.is_admin or self.request.user.is_employee or self.request.user.is_customer:
             try:
                 queryset = self.get_queryset(id=self.kwargs["id"])
-                serializer = IntershalaSkillReadSerializer(queryset)
+                serializer = self.get_serializer(queryset)
                 return Response(serializer.data, status=200)
             except:
                 return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
