@@ -13,3 +13,6 @@ class JobPosition(models.Model):
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return "{} {}".format(self.job_profile, self.sallery)
