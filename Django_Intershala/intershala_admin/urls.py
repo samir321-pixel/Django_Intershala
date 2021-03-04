@@ -7,4 +7,5 @@ urlpatterns = [
     path('student/', IntershalaStudentViewSets.as_view()),
     path('recruiter/', IntershalaRecruiterViewSets.as_view()),
     path('profile/', IntershalaJobProfileViewSets.as_view()),
+    path('skill/', IntershalaSkillViewSets.as_view()),
 ]
