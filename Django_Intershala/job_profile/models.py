@@ -4,7 +4,7 @@ from django.db import models
 # Create your models here.
 class Skill(models.Model):
     id = models.AutoField(primary_key=True)
-    skill_name = models.CharField(max_length=100)
+    skill_name = models.CharField(max_length=100, unique=True)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True)
@@ -15,7 +15,7 @@ class Skill(models.Model):
 
 class Profile(models.Model):
     id = models.AutoField(primary_key=True)
-    profile_name = models.CharField(max_length=100)
+    profile_name = models.CharField(max_length=100, unique=True)
     skills = models.ManyToManyField(Skill)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)

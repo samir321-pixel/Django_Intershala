@@ -53,8 +53,6 @@ INSTALLED_APPS = [
     'rest_auth.registration',
     'job_profile',
     'drf_yasg',  
-
-
 ]
 
 MIDDLEWARE = [
