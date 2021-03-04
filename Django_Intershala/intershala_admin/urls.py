@@ -5,4 +5,5 @@ from .views import *
 
 urlpatterns = [
     path('student/', IntershalaStudentViewSets.as_view()),
+    path('recruiter/', IntershalaStudentViewSets.as_view()),
 ]
