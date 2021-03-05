@@ -1,5 +1,6 @@
 from django.db import models
 from djmoney.models.fields import MoneyField
+from localflavor.in_.models import INStateField
 
 
 # Create your models here.
@@ -35,6 +36,7 @@ class Profile(models.Model):
     question = models.ManyToManyField("job_profile.Assessment_question", related_name='questions', null=True,
                                       blank=True)
     location = models.CharField(max_length=100)
+    state = INStateField(null=True, blank=True)
     vacancy = models.IntegerField(blank=False, null=False)
     updated_at = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True)
