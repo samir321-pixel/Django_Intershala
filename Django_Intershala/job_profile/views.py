@@ -37,7 +37,8 @@ class ProfileViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         if self.request.user.is_recruiter:
             try:
-                instance = self.queryset.get(id=self.kwargs["id"])
+                instance = Profile.objects.get(id=self.kwargs["id"],
+                                               recruiter=Recruiter.objects.get(user=self.request.user.id))
             except ObjectDoesNotExist:
                 return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
             serializer = self.get_serializer(instance, data=self.request.data, partial=True)
@@ -52,10 +53,23 @@ class ProfileViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         if self.request.user.is_recruiter:
             try:
-                instance = self.queryset.get(id=self.kwargs["id"])
+                instance = Profile.objects.get(id=self.kwargs["id"],
+                                               recruiter=Recruiter.objects.get(user=self.request.user.id))
             except ObjectDoesNotExist:
                 return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
             instance.delete()
             return Response({"Profile Deleted": "Access Granted"}, status=200)
+        else:
+            return Response({"NO_ACCESS": "Access Denied"}, status=401)
+
+    def retrieve(self, request, *args, **kwargs):
+        if self.request.user.is_recruiter:
+            try:
+                instance = Profile.objects.get(id=self.kwargs["id"],
+                                               recruiter=Recruiter.objects.get(user=self.request.user.id))
+                serializer = self.get_serializer(instance)
+                return Response(serializer.data)
+            except ObjectDoesNotExist:
+                return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
         else:
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
