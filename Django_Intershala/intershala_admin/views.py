@@ -1,6 +1,6 @@
 from datetime import datetime
 from user.models import User
-from rest_framework import viewsets, generics
+from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from .serializers import *
 # Create your views here.
@@ -200,7 +200,6 @@ class IntershalaSkillUpdateViewSets(generics.RetrieveUpdateDestroyAPIView):
                     queryset = Skill.objects.get(id=self.kwargs["id"])
                     serializer = self.get_serializer(queryset, data=self.request.data, partial=True)
                     if serializer.is_valid(raise_exception=True):
-                        print(queryset, request.data)
                         serializer.save(updated_at=datetime.now())
                         return Response(serializer.data, status=200)
                     else:

@@ -17,7 +17,7 @@ class Profile(models.Model):
     id = models.AutoField(primary_key=True)
     recruiter = models.ForeignKey("recruiter.Recruiter", on_delete=models.CASCADE)
     profile_name = models.CharField(max_length=100)
-    skills = models.ManyToManyField(Skill)
+    skills = models.ManyToManyField(Skill, null=True, blank=True)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True)
