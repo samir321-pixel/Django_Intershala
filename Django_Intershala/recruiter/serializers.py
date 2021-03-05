@@ -6,3 +6,5 @@ class RecruiterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recruiter
         fields = '__all__'
+
+

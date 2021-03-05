@@ -48,7 +48,7 @@ class IntershalaRecruiterViewSets(generics.ListAPIView, generics.RetrieveDestroy
     permission_classes = (IsAuthenticated,)
     lookup_field = "id"
     filter_backends = [SearchFilter, ]
-    search_fields = ['first_name', 'email', 'company', 'active']
+    search_fields = ['first_name', 'company']
 
     def list(self, request, *args, **kwargs):
         if self.request.user.is_employee or self.request.user.is_superuser or self.request.user.is_admin:

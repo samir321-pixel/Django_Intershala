@@ -19,6 +19,8 @@ class Profile(models.Model):
     profile_name = models.CharField(max_length=100)
     skills = models.ManyToManyField(Skill, null=True, blank=True)
     created_at = models.DateTimeField(auto_now=True)
+    question = models.ManyToManyField("job_profile.Assessment_question", related_name='questions', null=True,
+                                      blank=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True)
 

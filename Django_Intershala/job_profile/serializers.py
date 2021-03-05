@@ -12,3 +12,9 @@ class SkillSerializer(serializers.ModelSerializer):
     class Meta:
         model = Skill
         fields = '__all__'
+
+
+class AssessmentQuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Assessment_question
+        fields = '__all__'

@@ -73,3 +73,75 @@ class ProfileViewSet(viewsets.ModelViewSet):
                 return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
         else:
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
+
+
+class AssessmentQuestionViewsets(viewsets.ModelViewSet):
+    queryset = Assessment_question.objects.all().order_by('-created_at')
+    serializer_class = AssessmentQuestionSerializer
+    lookup_field = "id"
+
+    def list(self, request, *args, **kwargs):
+        if self.request.user.is_recruiter:
+            query = Assessment_question.objects.filter(
+                recruiter=Recruiter.objects.get(user=self.request.user.id)).order_by(
+                '-created_at')
+            serializer = self.get_serializer(query, many=True)
+            return Response(serializer.data)
+        else:
+            return Response({"NO_ACCESS": "Access Denied"}, status=401)
+
+    def perform_create(self, serializer):
+        try:
+            if self.request.user.is_recruiter:
+                serializer = self.get_serializer(data=self.request.data)
+                if serializer.is_valid(raise_exception=True):
+                    data = serializer.save(recruiter=Recruiter.objects.get(user=self.request.user.id), active=True)
+                    profile_query = Profile.objects.get(id=self.request.data.get('profile'))
+                    profile_query.question.add(data)
+                    return Response(serializer.data, status=200)
+                else:
+                    return Response(serializer.errors, status=401)
+        except:
+            return Response({"NO_ACCESS": "Access Denied"}, status=401)
+
+    def update(self, request, *args, **kwargs):
+        if self.request.user.is_recruiter:
+            try:
+                instance = Assessment_question.objects.get(id=self.kwargs["id"],
+                                                           recruiter=Recruiter.objects.get(user=self.request.user.id))
+            except ObjectDoesNotExist:
+                return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
+            serializer = self.get_serializer(instance, data=self.request.data, partial=True)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save(updated_at=datetime.datetime.now())
+                return Response(serializer.data)
+            else:
+                return Response(serializer.errors, status=401)
+        else:
+            return Response({"NO_ACCESS": "Access Denied"}, status=401)
+
+    def destroy(self, request, *args, **kwargs):
+        if self.request.user.is_recruiter:
+            try:
+                instance = Assessment_question.objects.get(id=self.kwargs["id"],
+                                                           recruiter=Recruiter.objects.get(user=self.request.user.id))
+                profile_query = Profile.objects.get(id=instance.profile.id)
+                profile_query.question.remove(instance)
+            except ObjectDoesNotExist:
+                return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
+            instance.delete()
+            return Response({"Question Deleted": "Access Granted"}, status=200)
+        else:
+            return Response({"NO_ACCESS": "Access Denied"}, status=401)
+
+    def retrieve(self, request, *args, **kwargs):
+        if self.request.user.is_recruiter:
+            try:
+                instance = Assessment_question.objects.get(id=self.kwargs["id"],
+                                                           recruiter=Recruiter.objects.get(user=self.request.user.id))
+                serializer = self.get_serializer(instance)
+                return Response(serializer.data)
+            except ObjectDoesNotExist:
+                return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
+        else:
+            return Response({"NO_ACCESS": "Access Denied"}, status=401)

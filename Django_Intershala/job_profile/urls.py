@@ -4,6 +4,7 @@ from .views import *
 
 router = routers.DefaultRouter()
 router.register('profile', ProfileViewSet, 'profile')
+router.register('question', AssessmentQuestionViewsets, 'question')
 
 urlpatterns = [
     path(r'', include(router.urls)),
