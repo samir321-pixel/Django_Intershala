@@ -8,29 +8,5 @@ router.register('manage_student', CreateStudent, 'manage_student')
 
 urlpatterns = [
     path(r'', include(router.urls)),
+    path('all_profile/', ProfileViewSets.as_view()),
 ]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

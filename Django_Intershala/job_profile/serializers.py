@@ -3,6 +3,8 @@ from rest_framework import serializers
 
 
 class ProfileSerializer(serializers.ModelSerializer):
+    sallery = serializers.CharField(max_length=200)
+
     class Meta:
         model = Profile
         fields = '__all__'
