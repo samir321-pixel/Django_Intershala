@@ -48,3 +48,14 @@ class ProfileViewSet(viewsets.ModelViewSet):
                 return Response(serializer.errors, status=401)
         else:
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
+
+    def destroy(self, request, *args, **kwargs):
+        if self.request.user.is_recruiter:
+            try:
+                instance = self.queryset.get(id=self.kwargs["id"])
+            except ObjectDoesNotExist:
+                return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
+            instance.delete()
+            return Response({"Profile Deleted": "Access Granted"}, status=200)
+        else:
+            return Response({"NO_ACCESS": "Access Denied"}, status=401)
