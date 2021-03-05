@@ -23,3 +23,13 @@ class ProfileViewSets(generics.ListAPIView):
     serializer_class = ProfileSerializer
     filter_backends = [SearchFilter, ]
     search_fields = ['profile_name', 'experience', 'employment_type', 'schedule', 'location']
+
+
+class StudentApplicationViewSets(viewsets.ModelViewSet):
+    queryset = StudentApplication.objects.all().order_by('-applied_on')
+    serializer_class = StudentApplicationSerializer
+
+    def list(self, request, *args, **kwargs):
+        query = StudentApplication.objects.filter(student=Student.objects.get(user=self.request.user.id))
+        serializer = self.get_serializer(query, many=True)
+        return Response(serializer.data, status=200)
