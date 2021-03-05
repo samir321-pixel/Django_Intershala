@@ -1,2 +1,2 @@
-# Django_Intershala
+# Django Intershala
  
