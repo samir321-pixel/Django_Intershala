@@ -16,11 +16,17 @@ class StudentApplicationSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class StudentNotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StudentNotification
+        fields = "__all__"
+
+
 class JobProfileReadSerializer(serializers.ModelSerializer):
     sallery = serializers.CharField(max_length=200)
 
     class Meta:
         model = Profile
         fields = ["sallery", "profile_name", "experience", "employment_type", "schedule", "location", "state",
-                  "vacancy",  "skills", "question"]
+                  "vacancy", "skills", "question"]
         depth = 1

@@ -106,3 +106,19 @@ class StudentApplicationViewSets(generics.ListCreateAPIView):
                 return Response(serializer.errors, status=400)
         else:
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
+
+
+class StudentNotificationViewSets(generics.ListAPIView):
+    queryset = StudentNotification.objects.all().order_by('-created_at')
+    serializer_class = StudentNotificationSerializer
+    permission_classes = [IsAuthenticated, ]
+
+    def list(self, request, *args, **kwargs):
+        if self.request.user.is_student:
+            queryset = StudentNotification.objects.filter(
+                student=Student.objects.get(user=self.request.user.id)).order_by('-created_at')
+            queryset.update(seen=True)
+            serializer = self.get_serializer(queryset, many=True)
+            return Response(serializer.data, status=200)
+        else:
+            return Response({"NO_ACCESS": "Access Denied"}, status=401)

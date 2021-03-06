@@ -12,4 +12,5 @@ urlpatterns = [
     path('student_signup/', CreateStudent.as_view()),
     path('student_profile/', StudentProfile.as_view()),
     path('student_application/', StudentApplicationViewSets.as_view()),
+    path('student_notification/', StudentNotificationViewSets.as_view()),
 ]
