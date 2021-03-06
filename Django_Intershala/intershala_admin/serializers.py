@@ -12,6 +12,14 @@ class IntershalaStudentSerializer(serializers.ModelSerializer):
         depth = 2
 
 
+class IntershalaEmployeeSerializer(serializers.ModelSerializer):
+    salary = serializers.CharField(max_length=200)
+
+    class Meta:
+        model = IntershalaEmployee
+        fields = '__all__'
+
+
 class IntershalaRecruiterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recruiter

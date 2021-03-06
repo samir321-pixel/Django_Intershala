@@ -1,6 +1,6 @@
 from datetime import datetime
 from user.models import User
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from rest_framework.permissions import IsAuthenticated
 from .serializers import *
 # Create your views here.
@@ -217,5 +217,32 @@ class IntershalaSkillUpdateViewSets(generics.RetrieveUpdateDestroyAPIView):
                 return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
             instance.delete()
             return Response({"Skill Deleted": "Access Granted"}, status=200)
+        else:
+            return Response({"NO_ACCESS": "Access Denied"}, status=401)
+
+
+class IntershalaEmployeeViewSets(viewsets.ModelViewSet):
+    queryset = IntershalaEmployee.objects.all().order_by('-created_at')
+    serializer_class = IntershalaEmployeeSerializer
+
+    def list(self, request, *args, **kwargs):
+        if self.request.user.is_superuser or self.request.user.is_admin:
+            query = IntershalaEmployee.objects.all()
+            serializer = self.get_serializer(query, many=True)
+            return Response(serializer.data, status=200)
+
+    def perform_create(self, serializer):
+        if self.request.user.is_superuser or self.request.user.is_admin:
+            serializer = self.get_serializer(data=self.request.data)
+            if serializer.is_valid(raise_exception=True):
+                user_query = User.objects.get(id=self.request.data.get('user'))
+                user_query.is_employee = True
+                user_query.is_student = False
+                user_query.save()
+                serializer.save(first_name=user_query.first_name, last_name=user_query.last_name, active=True,
+                                user=user_query)
+                return Response(serializer.data, status=200)
+            elif not serializer.is_valid:
+                return Response(serializer.errors)
         else:
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
