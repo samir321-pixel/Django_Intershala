@@ -8,4 +8,5 @@ router.register('question', AssessmentQuestionViewsets, 'question')
 
 urlpatterns = [
     path(r'', include(router.urls)),
+    path('student_applications/<int:id>/', StudentApplicationsViewSet.as_view()),
 ]

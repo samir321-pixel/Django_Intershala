@@ -1,6 +1,8 @@
 from .models import *
 from rest_framework import serializers
 
+from student.models import StudentApplication
+
 
 class ProfileSerializer(serializers.ModelSerializer):
     sallery = serializers.CharField(max_length=200)
@@ -17,6 +19,12 @@ class ProfileReadSerializer(serializers.ModelSerializer):
         model = Profile
         fields = '__all__'
         depth = 1
+
+
+class StudentApplicationReadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StudentApplication
+        fields = '__all__'
 
 
 class SkillSerializer(serializers.ModelSerializer):

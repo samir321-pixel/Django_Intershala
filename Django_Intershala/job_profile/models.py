@@ -44,16 +44,44 @@ class Profile(models.Model):
     vacancy = models.IntegerField(blank=False, null=False)
     updated_at = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True)
-    number_of_applicants = models.IntegerField(default=0)
+    applied_applicants = models.IntegerField(default=0)
+    selected_applicants = models.IntegerField(default=0)
+    rejected_applicants = models.IntegerField(default=0)
+    intouch_applicants = models.IntegerField(default=0)
+    total_applicants = models.IntegerField(default=0)
     immediate = models.BooleanField(default=False)
 
     def __str__(self):
         return "{} {}".format(self.profile_name, self.active)
 
-    def received_application_counter(self):
+    def applied_application_counter(self):
         for i in Profile.objects.filter(active=True):
             count = StudentApplication.objects.filter(profile=i, status='Applied').count()
-            i.number_of_applicants = count
+            i.applied_applicants = count
+            i.save()
+
+    def selected_application_counter(self):
+        for i in Profile.objects.filter(active=True):
+            count = StudentApplication.objects.filter(profile=i, status='Selected').count()
+            i.selected_applicants = count
+            i.save()
+
+    def rejected_application_counter(self):
+        for i in Profile.objects.filter(active=True):
+            count = StudentApplication.objects.filter(profile=i, status='Rejected').count()
+            i.rejected_applicants = count
+            i.save()
+
+    def intouch_application_counter(self):
+        for i in Profile.objects.filter(active=True):
+            count = StudentApplication.objects.filter(profile=i, status='in_touch').count()
+            i.intouch_applicants = count
+            i.save()
+
+    def total_application_counter(self):
+        for i in Profile.objects.filter(active=True):
+            count = StudentApplication.objects.filter(profile=i).count()
+            i.total_applicants = count
             i.save()
 
 

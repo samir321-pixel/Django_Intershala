@@ -42,6 +42,7 @@ class StudentApplication(models.Model):
     profile = models.ForeignKey("job_profile.Profile", on_delete=models.CASCADE)
     active = models.BooleanField(default=True)
     applied_on = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
     answer = models.ManyToManyField("job_profile.Assessment_answer", blank=True, null=True)
     resume = models.URLField(max_length=800, null=False, blank=False)
     status = models.CharField(max_length=50, choices=Status, default='Applied')
