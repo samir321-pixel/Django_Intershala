@@ -16,7 +16,6 @@ class IntershalaRecruiterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recruiter
         fields = '__all__'
-        depth = 2
 
 
 class IntershalaJobProfileReadSerializer(serializers.ModelSerializer):

@@ -10,19 +10,19 @@ gender_choices = (
 
 
 class Recruiter(models.Model):
-    user = models.OneToOneField("user.User", on_delete=models.PROTECT)
-    first_Name = models.CharField(max_length=200)
-    middle_Name = models.CharField(max_length=200)
+    user = models.OneToOneField("user.User", on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=200, null=True)
+    last_name = models.CharField(max_length=200, null=True)
     company = models.CharField(max_length=200, unique=True)
-    last_Name = models.CharField(max_length=200, default="", null=True, blank=True)
-    DOB = models.DateField()
-    gender = models.CharField(max_length=10, choices=gender_choices)
+    DOB = models.DateField(null=True)
+    created_profile = models.ManyToManyField("job_profile.Profile", null=True, blank=True, related_name="my_profiles")
+    gender = models.CharField(max_length=10, choices=gender_choices, default="Male")
     active = models.BooleanField(default=True)
-    Address = models.CharField(max_length=200, null=True, blank=True)
-    city = models.CharField(max_length=20, null=True, blank=True)
-    state = models.CharField(max_length=200, null=True, blank=True)
+    company_address = models.CharField(max_length=200)
+    city = models.CharField(max_length=20)
+    state = models.CharField(max_length=200)
     pincode = models.CharField(("pin code"), max_length=7, default="00000")
     created_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return "{} {}".format(self.user, self.first_Name)
+        return "{} {}".format(self.user, self.first_name)

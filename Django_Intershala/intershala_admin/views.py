@@ -1,6 +1,6 @@
 from datetime import datetime
-
-from rest_framework import viewsets, generics
+from user.models import User
+from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from .serializers import *
 # Create your views here.
@@ -42,13 +42,13 @@ class IntershalaStudentViewSets(generics.ListAPIView, generics.DestroyAPIView):
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
 
 
-class IntershalaRecruiterViewSets(generics.ListAPIView, generics.DestroyAPIView):
-    queryset = Profile.objects.all().order_by('-created_at')
+class IntershalaRecruiterViewSets(generics.ListAPIView, generics.RetrieveDestroyAPIView, generics.CreateAPIView):
+    queryset = Recruiter.objects.all().order_by('-created_at')
     serializer_class = IntershalaRecruiterSerializer
     permission_classes = (IsAuthenticated,)
     lookup_field = "id"
     filter_backends = [SearchFilter, ]
-    search_fields = ['first_name', 'email', 'company', 'active']
+    search_fields = ['first_name', 'company']
 
     def list(self, request, *args, **kwargs):
         if self.request.user.is_employee or self.request.user.is_superuser or self.request.user.is_admin:
@@ -60,10 +60,28 @@ class IntershalaRecruiterViewSets(generics.ListAPIView, generics.DestroyAPIView)
         else:
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
 
+    def create(self, request, *args, **kwargs):
+        if self.request.user.is_employee or self.request.user.is_superuser or self.request.user.is_admin:
+            serializer = self.get_serializer(data=request.data)
+            if serializer.is_valid(raise_exception=True):
+                user_query = User.objects.get(id=request.data.get('user'))
+                user_query.is_recruiter = True
+                user_query.is_student = False
+                user_query.save()
+                serializer.save(first_name=user_query.first_name, last_name=user_query.last_name, active=True)
+                return Response(serializer.data)
+            elif not serializer.is_valid:
+                return Response(serializer.errors)
+        else:
+            return Response({"NO_ACCESS": "Access Denied"}, status=401)
+
     def destroy(self, request, *args, **kwargs):
         if self.request.user.is_employee or self.request.user.is_superuser or self.request.user.is_admin:
             try:
                 instance = self.queryset.get(id=self.kwargs["id"])
+                user_query = User.objects.get(id=instance.user.id)
+                user_query.is_recruiter = False
+                user_query.save()
             except ObjectDoesNotExist:
                 return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
             instance.delete()
@@ -182,7 +200,6 @@ class IntershalaSkillUpdateViewSets(generics.RetrieveUpdateDestroyAPIView):
                     queryset = Skill.objects.get(id=self.kwargs["id"])
                     serializer = self.get_serializer(queryset, data=self.request.data, partial=True)
                     if serializer.is_valid(raise_exception=True):
-                        print(queryset, request.data)
                         serializer.save(updated_at=datetime.now())
                         return Response(serializer.data, status=200)
                     else:

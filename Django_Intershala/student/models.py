@@ -11,22 +11,42 @@ GENDER_CHOICES = (
 
 # Create your models here.
 class Student(models.Model):
+    id = models.AutoField(primary_key=True)
     user = models.ForeignKey('user.User', on_delete=models.CASCADE)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100, null=True, blank=True)
     date_of_birth = models.DateField(auto_now=False)
     gender = models.CharField(choices=GENDER_CHOICES, max_length=30, default="Male")
-    phone = PhoneField(blank=False)
-    email = models.EmailField()
+    phone = PhoneField(blank=False, unique=True)
+    email = models.EmailField(unique=True)
     city = models.CharField(max_length=50)
     state = INStateField(null=True, blank=True)
+    applied_application = models.ManyToManyField("student.StudentApplication", null=True, blank=True, related_name="my_application")
     active = models.BooleanField(default=True)
-    school_name = models.CharField(max_length=200)
-    degree = models.CharField(max_length=100)
-    date_added = models.DateField(auto_now_add=True)
     created_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return "{} {}".format(self.first_name, self.email)
 
-# hey samir mujhe isme resume ke liye filed daalni hei but smjh nhi araha hei ki kese daalu vo aap krdo and tell me pleasse
+
+class StudentApplication(models.Model):
+    Status = (
+        ('Selected', 'Selected'),
+        ('Rejected', 'Rejected'),
+        ('in_touch', 'in_touch'),
+        ('Applied', 'Applied'),
+    )
+    id = models.AutoField(primary_key=True)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    profile = models.ForeignKey("job_profile.Profile", on_delete=models.CASCADE)
+    active = models.BooleanField(default=True)
+    applied_on = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+    answer = models.ManyToManyField("job_profile.Assessment_answer", blank=True, null=True)
+    resume = models.URLField(max_length=800, null=False, blank=False)
+    status = models.CharField(max_length=50, choices=Status, default='Applied')
+    other_links = models.URLField(max_length=800, null=True, blank=True)
+
+    def __str__(self):
+        return "{} {}".format(self.student, self.status)
