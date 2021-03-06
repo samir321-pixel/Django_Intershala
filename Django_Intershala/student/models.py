@@ -23,6 +23,7 @@ class Student(models.Model):
     state = INStateField(null=True, blank=True)
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return "{} {}".format(self.first_name, self.email)

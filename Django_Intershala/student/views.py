@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
 from user.models import User
@@ -35,6 +37,31 @@ class CreateStudent(generics.CreateAPIView):
 class StudentProfile(generics.RetrieveUpdateAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
+    lookup_field = "user"
+
+    def retrieve(self, request, *args, **kwargs):
+        if self.request.user.is_student:
+            try:
+                instance = Student.objects.get(user=self.request.user.id)
+            except ObjectDoesNotExist:
+                return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
+            serializer = self.get_serializer(instance)
+            return Response(serializer.data, status=200)
+
+    def update(self, request, *args, **kwargs):
+        if self.request.user.is_student:
+            try:
+                instance = Student.objects.get(user=self.request.user.id)
+            except ObjectDoesNotExist:
+                return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
+            serializer = self.get_serializer(instance, data=self.request.data, partial=True)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save(updated_at=datetime.now())
+                return Response(serializer.data)
+            else:
+                return Response(serializer.errors, status=401)
+        else:
+            return Response({"NO_ACCESS": "Access Denied"}, status=401)
 
 
 class ProfileViewSets(generics.ListAPIView):

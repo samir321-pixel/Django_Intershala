@@ -10,4 +10,6 @@ urlpatterns = [
     path(r'', include(router.urls)),
     path('all_profile/', ProfileViewSets.as_view()),
     path('student_signup/', CreateStudent.as_view()),
+    path('student_profile/', StudentProfile.as_view()),
+    path('student_profile/<int:id>', StudentProfile.as_view()),
 ]
