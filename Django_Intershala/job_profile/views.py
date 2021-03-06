@@ -4,7 +4,7 @@ from .serializers import *
 from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 import datetime
-
+from rest_framework.filters import SearchFilter
 from recruiter.models import Recruiter
 
 from student.models import StudentApplication
@@ -13,6 +13,8 @@ from student.models import StudentApplication
 class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
+    filter_backends = [SearchFilter, ]
+    search_fields = ['profile_name', 'experience', 'employment_type', 'schedule', 'location', 'recruiter__company']
     lookup_field = "id"
 
     def list(self, request, *args, **kwargs):
@@ -24,6 +26,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
             Profile.total_application_counter(self=self)
             query = Profile.objects.filter(recruiter=Recruiter.objects.get(user=self.request.user.id)).order_by(
                 '-created_at')
+            query = self.filter_queryset(self.get_queryset())
             serializer = ProfileReadSerializer(query, many=True)
             return Response(serializer.data)
         else:
