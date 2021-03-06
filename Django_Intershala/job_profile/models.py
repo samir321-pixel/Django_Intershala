@@ -2,8 +2,10 @@ from django.db import models
 from djmoney.models.fields import MoneyField
 from localflavor.in_.models import INStateField
 
-
 # Create your models here.
+from student.models import StudentApplication
+
+
 class Skill(models.Model):
     id = models.AutoField(primary_key=True)
     skill_name = models.CharField(max_length=100, unique=True)
@@ -35,7 +37,8 @@ class Profile(models.Model):
     created_at = models.DateTimeField(auto_now=True)
     question = models.ManyToManyField("job_profile.Assessment_question", related_name='questions', null=True,
                                       blank=True)
-    received_application = models.ManyToManyField("student.StudentApplication", null=True, blank=True, related_name="received_applications")
+    received_application = models.ManyToManyField("student.StudentApplication", null=True, blank=True,
+                                                  related_name="received_applications")
     location = models.CharField(max_length=100)
     state = INStateField(null=True, blank=True)
     vacancy = models.IntegerField(blank=False, null=False)
@@ -46,6 +49,12 @@ class Profile(models.Model):
 
     def __str__(self):
         return "{} {}".format(self.profile_name, self.active)
+
+    def received_application_counter(self):
+        for i in Profile.objects.filter(active=True):
+            count = StudentApplication.objects.filter(profile=i, status='Applied').count()
+            i.number_of_applicants = count
+            i.save()
 
 
 class Assessment_question(models.Model):

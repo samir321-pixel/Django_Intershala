@@ -70,7 +70,7 @@ class ProfileViewSets(generics.ListAPIView):
     search_fields = ['profile_name', 'experience', 'employment_type', 'schedule', 'location', 'recruiter__company']
 
 
-class StudentApplicationViewSets(viewsets.ModelViewSet):
+class StudentApplicationViewSets(generics.ListCreateAPIView):
     queryset = StudentApplication.objects.all().order_by('-applied_on')
     serializer_class = StudentApplicationSerializer
 
@@ -82,7 +82,7 @@ class StudentApplicationViewSets(viewsets.ModelViewSet):
         except:
             return Response({"You are Not Student": "Access Denied"})
 
-    def perform_create(self, serializer):
+    def create(self, request, *args, **kwargs):
         if self.request.user.is_student:
             serializer = self.get_serializer(data=self.request.data)
             if serializer.is_valid(raise_exception=True):

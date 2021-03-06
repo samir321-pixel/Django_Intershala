@@ -15,9 +15,10 @@ class ProfileViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         if self.request.user.is_recruiter:
+            Profile.received_application_counter(self=self)
             query = Profile.objects.filter(recruiter=Recruiter.objects.get(user=self.request.user.id)).order_by(
                 '-created_at')
-            serializer = self.get_serializer(query, many=True)
+            serializer = ProfileReadSerializer(query, many=True)
             return Response(serializer.data)
         else:
             return Response({"NO_ACCESS": "Access Denied"}, status=401)

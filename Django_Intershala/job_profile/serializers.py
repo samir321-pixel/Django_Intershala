@@ -10,6 +10,15 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ProfileReadSerializer(serializers.ModelSerializer):
+    sallery = serializers.CharField(max_length=200)
+
+    class Meta:
+        model = Profile
+        fields = '__all__'
+        depth = 1
+
+
 class SkillSerializer(serializers.ModelSerializer):
     class Meta:
         model = Skill
