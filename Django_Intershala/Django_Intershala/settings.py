@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'localflavor',
     'rest_auth.registration',
     'job_profile',
+    'intershala_admin',
     'drf_yasg',
 ]
 SITE_ID = 1

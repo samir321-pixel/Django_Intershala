@@ -71,6 +71,6 @@ class StudentNotification(models.Model):
 
     def unseen_notification_counter(self):
         for i in Student.objects.all():
-            count = StudentNotification.objects.filter(recruiter=i, seen=False).count()
+            count = StudentNotification.objects.filter(student=i, seen=False).count()
             i.unseen_notification = count
             i.save()
