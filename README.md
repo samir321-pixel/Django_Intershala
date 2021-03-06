@@ -84,12 +84,13 @@ The project will be available at http://127.0.0.1:8000/
 
 ## Contributors ✨
 
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key))
+Thanks goes to these wonderful peoples.
 <table>
   <tr>
-    <td align="center"><a href="https://kentcdodds.com"><img src="https://avatars.githubusercontent.com/u/1500684?v=3?s=100" width="100px;" alt=""/><br /><sub><b>Kent C. Dodds</b></sub></a><br /><a href="#question-kentcdodds" title="Answering Questions">💬</a> <a href="https://github.com/all-contributors/all-contributors/commits?author=kentcdodds" title="Documentation">📖</a> <a href="https://github.com/all-contributors/all-contributors/pulls?q=is%3Apr+reviewed-by%3Akentcdodds" title="Reviewed Pull Requests">👀</a> <a href="#talk-kentcdodds" title="Talks">📢</a></td>
+    <td align="center"><a href="https://github.com/samir321-pixel"><img src="https://avatars.githubusercontent.com/u/65664404?s=460&u=167c60fa1ee64bd0cbd0a42149ab2daab493535d&v=4" width="100px;" alt=""/><br /><sub><b>Samir Saitwal</b></sub></a><br /><a href="" title="Answering Questions">💬</a> <a href="" title="Documentation">📖</a> <a href="#" title="Reviewed Pull Requests">👀</a> <a href="#" title="Talks">📢</a></td>
      </tr>
 </table>
+
 ## 🏆 Project Admin 🏆
 [![Maintenance](https://img.shields.io/maintenance/yes/2020?color=green&logo=github)](https://github.com/samir321-pixel)
 
