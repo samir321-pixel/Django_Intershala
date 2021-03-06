@@ -81,3 +81,19 @@ class StudentApplicationViewSets(viewsets.ModelViewSet):
             return Response(serializer.data, status=200)
         except:
             return Response({"You are Not Student": "Access Denied"})
+
+    def perform_create(self, serializer):
+        if self.request.user.is_student:
+            serializer = self.get_serializer(data=self.request.data)
+            if serializer.is_valid(raise_exception=True):
+                data = serializer.save(student=Student.objects.get(user=self.request.user.id), status='Applied',
+                                       active=True)
+                student_query = Student.objects.get(user=self.request.user.id)
+                profile_query = Profile.objects.get(id=self.request.data.get('profile'))
+                profile_query.received_application.add(data)
+                student_query.applied_application.add(data)
+                return Response(serializer.data, status=200)
+            else:
+                return Response(serializer.errors, status=400)
+        else:
+            return Response({"NO_ACCESS": "Access Denied"}, status=401)

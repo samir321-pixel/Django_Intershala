@@ -35,12 +35,13 @@ class Profile(models.Model):
     created_at = models.DateTimeField(auto_now=True)
     question = models.ManyToManyField("job_profile.Assessment_question", related_name='questions', null=True,
                                       blank=True)
+    received_application = models.ManyToManyField("student.StudentApplication", null=True, blank=True, related_name="received_applications")
     location = models.CharField(max_length=100)
     state = INStateField(null=True, blank=True)
     vacancy = models.IntegerField(blank=False, null=False)
     updated_at = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True)
-    number_of_applicants = models.IntegerField(default=0, null=True)
+    number_of_applicants = models.IntegerField(default=0)
     immediate = models.BooleanField(default=False)
 
     def __str__(self):
