@@ -82,8 +82,14 @@ The project will be available at http://127.0.0.1:8000/
 | :---------: | :---------: | :---------: | :---------: | :---------: |
 | Yes | 10+ | Yes | Yes | Yes |
 
+## Contributors ✨
 
-
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key))
+<table>
+  <tr>
+    <td align="center"><a href="https://kentcdodds.com"><img src="https://avatars.githubusercontent.com/u/1500684?v=3?s=100" width="100px;" alt=""/><br /><sub><b>Kent C. Dodds</b></sub></a><br /><a href="#question-kentcdodds" title="Answering Questions">💬</a> <a href="https://github.com/all-contributors/all-contributors/commits?author=kentcdodds" title="Documentation">📖</a> <a href="https://github.com/all-contributors/all-contributors/pulls?q=is%3Apr+reviewed-by%3Akentcdodds" title="Reviewed Pull Requests">👀</a> <a href="#talk-kentcdodds" title="Talks">📢</a></td>
+     </tr>
+</table>
 ## 🏆 Project Admin 🏆
 [![Maintenance](https://img.shields.io/maintenance/yes/2020?color=green&logo=github)](https://github.com/samir321-pixel)
 
