@@ -18,7 +18,7 @@ class RecruiterNotification(models.Model):
 
     def notify_recruiter(self, student, recruiter, recruiter_name, profile):
         RecruiterNotification.objects.create(recruiter=recruiter,
-                                             message="Hello {}, {} applied for your {}. ".format(recruiter_name,
+                                             message="Hello {}, {} applied for {} profile. ".format(recruiter_name,
                                                                                                  student, profile))
 
     def unseen_notification_counter(self):

@@ -21,7 +21,8 @@ class Student(models.Model):
     email = models.EmailField(unique=True)
     city = models.CharField(max_length=50)
     state = INStateField(null=True, blank=True)
-    applied_application = models.ManyToManyField("student.StudentApplication", null=True, blank=True, related_name="my_application")
+    applied_application = models.ManyToManyField("student.StudentApplication", null=True, blank=True,
+                                                 related_name="my_application")
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
@@ -50,3 +51,26 @@ class StudentApplication(models.Model):
 
     def __str__(self):
         return "{} {}".format(self.student, self.status)
+
+
+class StudentNotification(models.Model):
+    id = models.AutoField(primary_key=True)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    message = models.TextField()
+    seen = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "{} {}".format(self.student, self.seen)
+
+    def notify_student(self, student, student_name, job_profile):
+        StudentNotification.objects.create(student=student,
+                                           message="Hello {}, You have successfully applied to  {}.".format(
+                                               student_name, job_profile))
+
+    def unseen_notification_counter(self):
+        for i in Student.objects.all():
+            count = StudentNotification.objects.filter(recruiter=i, seen=False).count()
+            i.unseen_notification = count
+            i.save()
