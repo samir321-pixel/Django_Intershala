@@ -21,6 +21,7 @@ class Student(models.Model):
     email = models.EmailField(unique=True)
     city = models.CharField(max_length=50)
     state = INStateField(null=True, blank=True)
+    applied_application = models.ManyToManyField("student.StudentApplication", null=True, blank=True, related_name="my_application")
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)

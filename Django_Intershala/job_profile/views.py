@@ -27,7 +27,9 @@ class ProfileViewSet(viewsets.ModelViewSet):
             if self.request.user.is_recruiter:
                 serializer = self.get_serializer(data=self.request.data)
                 if serializer.is_valid(raise_exception=True):
-                    serializer.save(recruiter=Recruiter.objects.get(user=self.request.user.id), active=True)
+                    data = serializer.save(recruiter=Recruiter.objects.get(user=self.request.user.id), active=True)
+                    recruiter_query = Recruiter.objects.get(user=self.request.user.id)
+                    recruiter_query.created_profile.add(data)
                     return Response(serializer.data, status=200)
                 else:
                     return Response(serializer.errors, status=401)

@@ -37,7 +37,6 @@ class CreateStudent(generics.CreateAPIView):
 class StudentProfile(generics.RetrieveUpdateAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
-    lookup_field = "user"
 
     def retrieve(self, request, *args, **kwargs):
         if self.request.user.is_student:
@@ -66,9 +65,9 @@ class StudentProfile(generics.RetrieveUpdateAPIView):
 
 class ProfileViewSets(generics.ListAPIView):
     queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
+    serializer_class = JobProfileReadSerializer
     filter_backends = [SearchFilter, ]
-    search_fields = ['profile_name', 'experience', 'employment_type', 'schedule', 'location']
+    search_fields = ['profile_name', 'experience', 'employment_type', 'schedule', 'location', 'recruiter__company']
 
 
 class StudentApplicationViewSets(viewsets.ModelViewSet):

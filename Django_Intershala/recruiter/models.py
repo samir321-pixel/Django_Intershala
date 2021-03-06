@@ -10,11 +10,12 @@ gender_choices = (
 
 
 class Recruiter(models.Model):
-    user = models.OneToOneField("user.User", on_delete=models.PROTECT)
+    user = models.OneToOneField("user.User", on_delete=models.CASCADE)
     first_name = models.CharField(max_length=200, null=True)
     last_name = models.CharField(max_length=200, null=True)
     company = models.CharField(max_length=200, unique=True)
     DOB = models.DateField(null=True)
+    created_profile = models.ManyToManyField("job_profile.Profile", null=True, blank=True, related_name="my_profiles")
     gender = models.CharField(max_length=10, choices=gender_choices, default="Male")
     active = models.BooleanField(default=True)
     company_address = models.CharField(max_length=200)
