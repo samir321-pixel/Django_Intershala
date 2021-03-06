@@ -21,5 +21,6 @@ class JobProfileReadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = "__all__"
+        fields = ["sallery", "profile_name", "experience", "employment_type", "schedule", "location", "state",
+                  "vacancy",  "skills", "question"]
         depth = 1

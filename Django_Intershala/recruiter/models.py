@@ -23,6 +23,10 @@ class Recruiter(models.Model):
     state = models.CharField(max_length=200)
     pincode = models.CharField(("pin code"), max_length=7, default="00000")
     created_at = models.DateTimeField(auto_now=True)
+    unseen_notification = models.IntegerField(default=0)
 
     def __str__(self):
         return "{} {}".format(self.user, self.first_name)
+
+
+

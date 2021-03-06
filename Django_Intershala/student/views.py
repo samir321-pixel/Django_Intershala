@@ -1,6 +1,4 @@
 from datetime import datetime
-
-from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
 from user.models import User
 from .models import *
@@ -12,6 +10,9 @@ from rest_framework.filters import SearchFilter
 from job_profile.models import Profile
 from django.db import IntegrityError
 from job_profile.serializers import ProfileSerializer
+from recruiter.notification_models import RecruiterNotification
+
+from recruiter.models import Recruiter
 
 
 class CreateStudent(generics.CreateAPIView):
@@ -76,6 +77,7 @@ class StudentApplicationViewSets(generics.ListCreateAPIView):
 
     def list(self, request, *args, **kwargs):
         try:
+
             query = StudentApplication.objects.filter(student=Student.objects.get(user=self.request.user.id))
             serializer = self.get_serializer(query, many=True)
             return Response(serializer.data, status=200)
@@ -90,8 +92,14 @@ class StudentApplicationViewSets(generics.ListCreateAPIView):
                                        active=True)
                 student_query = Student.objects.get(user=self.request.user.id)
                 profile_query = Profile.objects.get(id=self.request.data.get('profile'))
+                recruiter_query = Recruiter.objects.get(id=profile_query.recruiter.id)
                 profile_query.received_application.add(data)
                 student_query.applied_application.add(data)
+                RecruiterNotification.notify_recruiter(self=self, student=student_query.first_name,
+                                                       recruiter=recruiter_query,
+                                                       recruiter_name=recruiter_query.first_name,
+                                                       profile=profile_query)
+                RecruiterNotification.unseen_notification_counter(self=self)
                 return Response(serializer.data, status=200)
             else:
                 return Response(serializer.errors, status=400)
