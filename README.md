@@ -87,7 +87,7 @@ The project will be available at http://127.0.0.1:8000/
 Thanks goes to these wonderful peoples.
 <table>
   <tr>
-    <td align="center"><a href="https://github.com/samir321-pixel"><img src="https://avatars.githubusercontent.com/u/65664404?s=460&u=167c60fa1ee64bd0cbd0a42149ab2daab493535d&v=4" width="100px;" alt=""/><br /><sub><b>Samir Saitwal</b></sub></a><br /><a href="" title="Answering Questions">💬</a> <a href="" title="Documentation">📖</a> <a href="#" title="Reviewed Pull Requests">👀</a> <a href="#" title="Talks">📢</a></td>
+    <td align="center"><a href="https://github.com/Preeta192821"><img src="https://avatars.githubusercontent.com/u/52908643?s=460&u=725ac6f7daf0c0caffe98faef85e0a5608513e6b&v=4" width="100px;" alt=""/><br /><sub><b>Preeti</b></sub></a><br /><a href="" title="">💬</a> <a href="" title="">📖</a> <a href="#" title="">👀</a> <a href="#" title="Talks">📢</a></td>
      </tr>
 </table>
 
