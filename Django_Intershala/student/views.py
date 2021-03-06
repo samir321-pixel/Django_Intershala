@@ -77,7 +77,6 @@ class StudentApplicationViewSets(generics.ListCreateAPIView):
 
     def list(self, request, *args, **kwargs):
         try:
-
             query = StudentApplication.objects.filter(student=Student.objects.get(user=self.request.user.id))
             serializer = self.get_serializer(query, many=True)
             return Response(serializer.data, status=200)

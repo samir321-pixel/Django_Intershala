@@ -8,4 +8,5 @@ router.register('manage_recruiter', CreateRecruiter, 'manage_recruiter')
 
 urlpatterns = [
     path(r'', include(router.urls)),
+    path('recruiter_notification/', RecruiterNotificationViewSets.as_view()),
 ]
