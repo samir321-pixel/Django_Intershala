@@ -246,3 +246,64 @@ class IntershalaEmployeeViewSets(viewsets.ModelViewSet):
                 return Response(serializer.errors)
         else:
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
+
+    def destroy(self, request, *args, **kwargs):
+        if self.request.user.is_superuser or self.request.user.is_admin:
+            try:
+                instance = self.queryset.get(id=self.kwargs["id"])
+                user_query = User.objects.get(id=instance.user.id)
+                user_query.is_employee = False
+                user_query.is_student = True
+                user_query.save()
+            except ObjectDoesNotExist:
+                return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
+            instance.delete()
+            return Response({"Employee Deleted": "Access Granted"}, status=200)
+        else:
+            return Response({"NO_ACCESS": "Access Denied"}, status=401)
+
+    def update(self, request, *args, **kwargs):
+        if self.request.user.is_superuser or self.request.user.is_admin:
+            try:
+                instance = IntershalaEmployee.objects.get(id=self.kwargs["id"])
+            except ObjectDoesNotExist:
+                return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
+            serializer = self.get_serializer(instance, data=self.request.data, partial=True)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save(updated_at=datetime.now())
+                return Response(serializer.data)
+            else:
+                return Response(serializer.errors, status=401)
+        else:
+            return Response({"NO_ACCESS": "Access Denied"}, status=401)
+
+
+class IntershalaEmployeeProfileViewSets(generics.RetrieveUpdateAPIView):
+    queryset = IntershalaEmployee.objects.all()
+    serializer_class = IntershalaEmployeeSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        if self.request.user.is_employee:
+            try:
+                instance = IntershalaEmployee.objects.get(user=self.request.user.id)
+            except ObjectDoesNotExist:
+                return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
+            serializer = self.get_serializer(instance)
+            return Response(serializer.data, status=200)
+        else:
+            return Response({"NO_ACCESS": "Access Denied"}, status=401)
+
+    def update(self, request, *args, **kwargs):
+        if self.request.user.is_employee:
+            try:
+                instance = IntershalaEmployee.objects.get(user=self.request.user.id)
+            except ObjectDoesNotExist:
+                return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
+            serializer = self.get_serializer(instance, data=self.request.data, partial=True)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save(updated_at=datetime.now())
+                return Response(serializer.data)
+            else:
+                return Response(serializer.errors, status=401)
+        else:
+            return Response({"NO_ACCESS": "Access Denied"}, status=401)

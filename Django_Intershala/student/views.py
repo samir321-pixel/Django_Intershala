@@ -47,6 +47,8 @@ class StudentProfile(generics.RetrieveUpdateAPIView):
                 return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
             serializer = self.get_serializer(instance)
             return Response(serializer.data, status=200)
+        else:
+            return Response({"NO_ACCESS": "Access Denied"}, status=401)
 
     def update(self, request, *args, **kwargs):
         if self.request.user.is_student:
