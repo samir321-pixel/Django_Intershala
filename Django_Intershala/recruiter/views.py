@@ -6,22 +6,29 @@ from rest_framework import viewsets, generics
 from rest_framework.permissions import IsAuthenticated
 from django.db import IntegrityError
 
-
 # Create your views here.
+from intershala_admin.models import AdminNotification
+
+
 class RecruiterSignin(generics.CreateAPIView):
     queryset = Recruiter.objects.all()
     serializer_class = RecruiterSignINSerializer
 
     def perform_create(self, serializer):
         try:
-            user = User.objects.create_user(username=self.request.data['first_name'], password=self.request.data['password'],
+            user = User.objects.create_user(username=self.request.data['first_name'],
+                                            password=self.request.data['password'],
                                             email=self.request.data['email'],
                                             is_recruiter=False)
         except IntegrityError:
             return Response({"RECRUITER_EXISTS": "Recruiter already exists with this Email."}, status=400)
         serializer = self.get_serializer(data=self.request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save(user=user, active=False)
+            data = serializer.save(user=user, active=False)
+            recruiter_query = Recruiter.objects.get(id=data.id)
+            if data:
+                AdminNotification.notify_admin(recruiter=recruiter_query,
+                                               recruiter_name=self.request.data.get('first_name'))
             return Response(serializer.data, status=200)
         else:
             return Response(serializer.errors, status=400)
