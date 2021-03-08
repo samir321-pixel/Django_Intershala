@@ -50,7 +50,7 @@ class AdminNotification(models.Model):
     recruiter = models.ForeignKey("recruiter.Recruiter", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
-    active = models.BooleanField(default=False)
+    seen = models.BooleanField(default=False)
 
     def __str__(self):
         return "{}".format(self.text)
