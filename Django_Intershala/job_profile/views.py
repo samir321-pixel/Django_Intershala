@@ -35,14 +35,18 @@ class ProfileViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         try:
             if self.request.user.is_recruiter:
-                serializer = self.get_serializer(data=self.request.data)
-                if serializer.is_valid(raise_exception=True):
-                    data = serializer.save(recruiter=Recruiter.objects.get(user=self.request.user.id), active=True)
-                    recruiter_query = Recruiter.objects.get(user=self.request.user.id)
-                    recruiter_query.created_profile.add(data)
-                    return Response(serializer.data, status=200)
-                else:
-                    return Response(serializer.errors, status=401)
+                recruiter_query = Recruiter.objects.get(user=self.request.user.id)
+                if recruiter_query.active:
+                    serializer = self.get_serializer(data=self.request.data)
+                    if serializer.is_valid(raise_exception=True):
+                        data = serializer.save(recruiter=Recruiter.objects.get(user=self.request.user.id), active=True)
+                        recruiter_query = Recruiter.objects.get(user=self.request.user.id)
+                        recruiter_query.created_profile.add(data)
+                        return Response(serializer.data, status=200)
+                    else:
+                        return Response(serializer.errors, status=401)
+                elif not recruiter_query.active:
+                    return Response({"NO_ACCESS": "Access Denied"}, status=401)
         except:
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
 
@@ -55,7 +59,11 @@ class ProfileViewSet(viewsets.ModelViewSet):
                 return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
             serializer = self.get_serializer(instance, data=self.request.data, partial=True)
             if serializer.is_valid(raise_exception=True):
-                serializer.save(updated_at=datetime.datetime.now())
+                recruiter_query = Recruiter.objects.get(user=self.request.user.id)
+                if recruiter_query.active:
+                    serializer.save(updated_at=datetime.datetime.now())
+                elif not recruiter_query.active:
+                    return Response({"NO_ACCESS": "Access Denied"}, status=401)
                 return Response(serializer.data)
             else:
                 return Response(serializer.errors, status=401)
@@ -69,17 +77,26 @@ class ProfileViewSet(viewsets.ModelViewSet):
                                                recruiter=Recruiter.objects.get(user=self.request.user.id))
             except ObjectDoesNotExist:
                 return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
-            instance.delete()
+            recruiter_query = Recruiter.objects.get(user=self.request.user.id)
+            if recruiter_query.active:
+                instance.delete()
+            elif not recruiter_query.active:
+                return Response({"NO_ACCESS": "Access Denied"}, status=401)
             return Response({"Profile Deleted": "Access Granted"}, status=200)
         else:
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
 
     def retrieve(self, request, *args, **kwargs):
+        global serializer
         if self.request.user.is_recruiter:
             try:
                 instance = Profile.objects.get(id=self.kwargs["id"],
                                                recruiter=Recruiter.objects.get(user=self.request.user.id))
-                serializer = self.get_serializer(instance)
+                recruiter_query = Recruiter.objects.get(user=self.request.user.id)
+                if recruiter_query.active:
+                    serializer = self.get_serializer(instance)
+                elif not recruiter_query.active:
+                    return Response({"NO_ACCESS": "Access Denied"}, status=401)
                 return Response(serializer.data)
             except ObjectDoesNotExist:
                 return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)

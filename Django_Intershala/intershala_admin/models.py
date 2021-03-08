@@ -45,3 +45,12 @@ class IntershalaEmployee(models.Model):
         return "{} {}".format(self.user, self.salary)
 
 
+class AdminNotification(models.Model):
+    text = models.TextField()
+    recruiter=models.ForeignKey("recruiter.Recruiter",on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+    active = models.BooleanField(default=False)
+
+    def __str__(self):
+        return "{}".format(self.text)

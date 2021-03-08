@@ -65,7 +65,6 @@ class IntershalaRecruiterUpdateView(generics.RetrieveUpdateDestroyAPIView):
                 except ObjectDoesNotExist:
                     return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
         except Exception as e:
-            print(e)
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
 
     def destroy(self, request, *args, **kwargs):

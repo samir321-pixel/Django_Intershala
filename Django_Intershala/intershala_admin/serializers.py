@@ -20,6 +20,12 @@ class IntershalaEmployeeSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class AdminNotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AdminNotification
+        fields = '__all__'
+
+
 class IntershalaRecruiterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recruiter
