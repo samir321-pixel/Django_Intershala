@@ -19,7 +19,17 @@ class RecruiterNotification(models.Model):
     def notify_recruiter(self, student, recruiter, recruiter_name, profile):
         RecruiterNotification.objects.create(recruiter=recruiter,
                                              message="Hello {}, {} applied for {} profile. ".format(recruiter_name,
-                                                                                                 student, profile))
+                                                                                                    student, profile))
+
+    def allow_recruiter(self, recruiter, recruiter_name):
+        RecruiterNotification.objects.create(recruiter=recruiter,
+                                             message="Hello {}, Congratulations you are now allow to post job profile and start hiring.".format(
+                                                 recruiter_name))
+
+    def denied_recruiter(self, recruiter, recruiter_name):
+        RecruiterNotification.objects.create(recruiter=recruiter,
+                                             message="Hello {}, Sorry to let you know but you are not allow to post job profile please contact Intershala Admin.".format(
+                                                 recruiter_name))
 
     def unseen_notification_counter(self):
         for i in Recruiter.objects.all():

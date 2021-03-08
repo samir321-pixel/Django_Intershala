@@ -24,7 +24,6 @@ class IntershalaStudentViewSets(generics.ListAPIView, generics.DestroyAPIView):
         if self.request.user.is_employee or self.request.user.is_superuser or self.request.user.is_admin:
             queryset = self.get_queryset()
             queryset = self.filter_queryset(queryset)
-            queryset = self.filter_queryset(queryset)
             serializer = self.get_serializer(queryset, many=True)
             return Response(serializer.data, status=200)
         else:

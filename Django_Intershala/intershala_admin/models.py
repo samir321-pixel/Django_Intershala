@@ -43,3 +43,5 @@ class IntershalaEmployee(models.Model):
 
     def __str__(self):
         return "{} {}".format(self.user, self.salary)
+
+
