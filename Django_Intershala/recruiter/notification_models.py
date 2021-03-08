@@ -1,8 +1,6 @@
+from datetime import datetime
 from django.db import models
 from .models import *
-from job_profile.models import Profile
-
-from student.models import Student
 
 
 class RecruiterNotification(models.Model):
@@ -24,12 +22,12 @@ class RecruiterNotification(models.Model):
     def allow_recruiter(self, recruiter, recruiter_name):
         RecruiterNotification.objects.create(recruiter=recruiter,
                                              message="Hello {}, Congratulations you are now allow to post job profile and start hiring.".format(
-                                                 recruiter_name))
+                                                 recruiter_name, updated_at=datetime.now()))
 
     def denied_recruiter(self, recruiter, recruiter_name):
         RecruiterNotification.objects.create(recruiter=recruiter,
                                              message="Hello {}, Sorry to let you know but you are not allow to post job profile please contact Intershala Admin.".format(
-                                                 recruiter_name))
+                                                 recruiter_name, updated_at=datetime.now()))
 
     def unseen_notification_counter(self):
         for i in Recruiter.objects.all():

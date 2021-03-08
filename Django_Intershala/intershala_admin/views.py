@@ -3,9 +3,7 @@ from user.models import User
 from rest_framework import generics, viewsets
 from rest_framework.permissions import IsAuthenticated
 from .serializers import *
-# Create your views here.
 from student.models import Student
-from recruiter.models import Recruiter
 from job_profile.models import Profile, Skill
 from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist

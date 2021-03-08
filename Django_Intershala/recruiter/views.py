@@ -6,7 +6,6 @@ from rest_framework import viewsets, generics
 from rest_framework.permissions import IsAuthenticated
 from django.db import IntegrityError
 
-# Create your views here.
 from intershala_admin.models import AdminNotification
 
 
