@@ -27,6 +27,13 @@ class AdminNotificationSerializer(serializers.ModelSerializer):
         depth = 1
 
 
+class EmployeeNotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmployeeNotification
+        fields = '__all__'
+        depth = 1
+
+
 class IntershalaRecruiterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recruiter

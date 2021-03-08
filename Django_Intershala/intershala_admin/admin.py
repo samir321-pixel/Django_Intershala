@@ -6,3 +6,4 @@ from .models import *
 
 admin.site.register(IntershalaEmployee)
 admin.site.register(AdminNotification)
+admin.site.register(EmployeeNotification)

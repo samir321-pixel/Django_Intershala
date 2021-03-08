@@ -45,6 +45,17 @@ class IntershalaEmployee(models.Model):
         return "{} {}".format(self.user, self.salary)
 
 
+class EmployeeNotification(models.Model):
+    employee = models.ForeignKey(IntershalaEmployee, on_delete=models.CASCADE)
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+    seen = models.BooleanField(default=False)
+
+    def __str__(self):
+        return "{} {}".format(self.employee, self.text)
+
+
 class AdminNotification(models.Model):
     text = models.TextField()
     recruiter = models.ForeignKey("recruiter.Recruiter", on_delete=models.CASCADE)
@@ -58,4 +69,4 @@ class AdminNotification(models.Model):
     def notify_admin(recruiter, recruiter_name):
         AdminNotification.objects.create(recruiter=recruiter,
                                          text="Hello Admin, {} want to collabrate with Intershala.".format(recruiter,
-                                                                                                          recruiter_name))
+                                                                                                           recruiter_name))
