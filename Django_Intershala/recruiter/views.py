@@ -4,19 +4,33 @@ from rest_framework.response import Response
 from .serializers import *
 from rest_framework import viewsets, generics
 from rest_framework.permissions import IsAuthenticated
+from django.db import IntegrityError
 
 
 # Create your views here.
-class CreateRecruiter(viewsets.ModelViewSet):
+class RecruiterSignin(generics.CreateAPIView):
     queryset = Recruiter.objects.all()
-    serializer_class = RecruiterSerializer
-    lookup_field = "id"
+    serializer_class = RecruiterSignINSerializer
+
+    def perform_create(self, serializer):
+        try:
+            user = User.objects.create_user(username=self.request.data['first_name'], password=self.request.data['password'],
+                                            email=self.request.data['email'],
+                                            is_recruiter=False)
+        except IntegrityError:
+            return Response({"RECRUITER_EXISTS": "Recruiter already exists with this Email."}, status=400)
+        serializer = self.get_serializer(data=self.request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(user=user, active=False)
+            return Response(serializer.data, status=200)
+        else:
+            return Response(serializer.errors, status=400)
 
 
 class RecruiterNotificationViewSets(generics.ListAPIView):
     queryset = RecruiterNotification.objects.all().order_by('-created_at')
     serializer_class = RecruiterNotificationSerializers
-    permission_classes = [IsAuthenticated,]
+    permission_classes = [IsAuthenticated, ]
 
     def list(self, request, *args, **kwargs):
         if self.request.user.is_recruiter:

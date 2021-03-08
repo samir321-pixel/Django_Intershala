@@ -8,8 +8,6 @@ router.register('intershala_employee', IntershalaEmployeeViewSets, 'intershala_e
 urlpatterns = [
     path(r'', include(router.urls)),
     path('manage_student/', IntershalaStudentViewSets.as_view()),
-    path('manage_recruiter/', IntershalaRecruiterViewSets.as_view()),
-    path('manage_recruiter/<int:id>/', IntershalaRecruiterViewSets.as_view()),
     path('manage_profile/', IntershalaJobProfileViewSets.as_view()),
     path('manage_skill/', IntershalaSkillViewSets.as_view()),
     path('manage_skill/<int:id>/', IntershalaSkillUpdateViewSets.as_view()),

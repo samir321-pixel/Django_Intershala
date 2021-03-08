@@ -42,54 +42,6 @@ class IntershalaStudentViewSets(generics.ListAPIView, generics.DestroyAPIView):
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
 
 
-class IntershalaRecruiterViewSets(generics.ListAPIView, generics.RetrieveDestroyAPIView, generics.CreateAPIView):
-    queryset = Recruiter.objects.all().order_by('-created_at')
-    serializer_class = IntershalaRecruiterSerializer
-    permission_classes = (IsAuthenticated,)
-    lookup_field = "id"
-    filter_backends = [SearchFilter, ]
-    search_fields = ['first_name', 'company']
-
-    def list(self, request, *args, **kwargs):
-        if self.request.user.is_employee or self.request.user.is_superuser or self.request.user.is_admin:
-            queryset = self.get_queryset()
-            queryset = self.filter_queryset(queryset)
-            queryset = self.filter_queryset(queryset)
-            serializer = self.get_serializer(queryset, many=True)
-            return Response(serializer.data, status=200)
-        else:
-            return Response({"NO_ACCESS": "Access Denied"}, status=401)
-
-    def create(self, request, *args, **kwargs):
-        if self.request.user.is_employee or self.request.user.is_superuser or self.request.user.is_admin:
-            serializer = self.get_serializer(data=request.data)
-            if serializer.is_valid(raise_exception=True):
-                user_query = User.objects.get(id=request.data.get('user'))
-                user_query.is_recruiter = True
-                user_query.is_student = False
-                user_query.save()
-                serializer.save(first_name=user_query.first_name, last_name=user_query.last_name, active=True)
-                return Response(serializer.data)
-            elif not serializer.is_valid:
-                return Response(serializer.errors)
-        else:
-            return Response({"NO_ACCESS": "Access Denied"}, status=401)
-
-    def destroy(self, request, *args, **kwargs):
-        if self.request.user.is_employee or self.request.user.is_superuser or self.request.user.is_admin:
-            try:
-                instance = self.queryset.get(id=self.kwargs["id"])
-                user_query = User.objects.get(id=instance.user.id)
-                user_query.is_recruiter = False
-                user_query.save()
-            except ObjectDoesNotExist:
-                return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
-            instance.delete()
-            return Response({"Recruiter Deleted": "Access Granted"}, status=200)
-        else:
-            return Response({"NO_ACCESS": "Access Denied"}, status=401)
-
-
 class IntershalaJobProfileViewSets(generics.ListAPIView, generics.DestroyAPIView, generics.RetrieveUpdateAPIView):
     queryset = Profile.objects.all().order_by('-created_at')
     serializer_class = IntershalaJobProfileReadSerializer

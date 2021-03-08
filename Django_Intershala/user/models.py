@@ -6,5 +6,5 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     is_admin = models.BooleanField(default=False)
     is_recruiter = models.BooleanField(default=False)
-    is_student = models.BooleanField(default=True)
+    is_student = models.BooleanField(default=False)
     is_employee = models.BooleanField(default=False)
