@@ -17,8 +17,8 @@ id_proof = (
 
 class IntershalaAdmin(models.Model):
     user = models.ForeignKey("user.User", on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=200, default="")
-    last_name = models.CharField(max_length=200)
+    first_name = models.CharField(max_length=200, null=True, blank=True)
+    last_name = models.CharField(max_length=200, null=True, blank=True)
     DOB = models.DateField()
     gender = models.CharField(max_length=10, choices=gender_choices)
     phone = PhoneField(blank=False, unique=True)
@@ -38,7 +38,7 @@ class IntershalaAdmin(models.Model):
 class IntershalaEmployee(models.Model):
     user = models.ForeignKey("user.User", on_delete=models.CASCADE, null=True, blank=True)
     first_name = models.CharField(max_length=200, default="")
-    middle_name = models.CharField(max_length=200, default="", null=True, blank=True)
+    middle_name = models.CharField(max_length=200, default="", )
     last_name = models.CharField(max_length=200, default="", null=True, blank=True)
     DOB = models.DateField()
     gender = models.CharField(max_length=10, choices=gender_choices)

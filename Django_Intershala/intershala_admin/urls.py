@@ -6,6 +6,7 @@ from .manage_recruiter import *
 from .admin_notification import *
 router = routers.DefaultRouter()
 router.register('intershala_employee', IntershalaEmployeeViewSets, 'intershala_employee ')
+router.register('intershala_admin', IntershalaAdminViewsets, 'intershala_admin ')
 urlpatterns = [
     path(r'', include(router.urls)),
     path('manage_student/', IntershalaStudentViewSets.as_view()),

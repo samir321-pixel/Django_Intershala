@@ -10,6 +10,70 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.filters import SearchFilter
 
 
+class IntershalaAdminViewsets(viewsets.ModelViewSet):
+    queryset = IntershalaAdmin.objects.all()
+    serializer_class = IntershalaAdminSerializer
+
+    def list(self, request, *args, **kwargs):
+        if self.request.user.is_superuser:
+            queryset = IntershalaAdmin.objects.all().order_by('-created_at')
+            serializer = self.get_serializer(queryset, many=True)
+            return Response(serializer.data, status=200)
+        else:
+            return Response({"NO_ACCESS": "Access Denied"}, status=401)
+
+    def perform_create(self, serializer):
+        if self.request.user.is_superuser:
+            serializer = self.get_serializer(data=self.request.data)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return Response(serializer.data, status=200)
+            else:
+                return Response(serializer.errors, status=401)
+        else:
+            return Response({"NO_ACCESS": "Access Denied"}, status=401)
+
+    def retrieve(self, request, *args, **kwargs):
+        if self.request.user.is_superuser:
+            try:
+                instance = IntershalaAdmin.objects.get(id=self.kwargs["id"])
+            except ObjectDoesNotExist:
+                return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
+            serializer = self.get_serializer(instance)
+            return Response(serializer.data, status=200)
+        else:
+            return Response({"NO_ACCESS": "Access Denied"}, status=401)
+
+    def perform_update(self, serializer):
+        if self.request.user.is_superuser:
+            try:
+                instance = IntershalaAdmin.objects.get(id=self.kwargs["id"])
+            except ObjectDoesNotExist:
+                return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
+            serializer = self.get_serializer(instance, data=self.request.data, partial=True)
+            if serializer.is_valid(raise_exception=True):
+                admin_query = IntershalaAdmin.objects.get(user=self.request.user.id)
+                serializer.save(updated_at=datetime.now())
+                return Response(serializer.data)
+            else:
+                return Response(serializer.errors, status=401)
+        else:
+            return Response({"NO_ACCESS": "Access Denied"}, status=401)
+
+    def destroy(self, request, *args, **kwargs):
+        if self.request.user.is_superuser:
+            try:
+                instance = IntershalaAdmin.objects.get(id=self.kwargs["id"])
+            except ObjectDoesNotExist:
+                return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
+            admin_query = IntershalaAdmin.objects.get(user=self.request.user.id)
+            if admin_query.active:
+                instance.delete()
+            return Response({"Admin Deleted": "Access Granted"}, status=200)
+        else:
+            return Response({"NO_ACCESS": "Access Denied"}, status=401)
+
+
 class IntershalaStudentViewSets(generics.ListAPIView, generics.DestroyAPIView):
     queryset = Student.objects.all().order_by('-created_at')
     serializer_class = IntershalaStudentSerializer
