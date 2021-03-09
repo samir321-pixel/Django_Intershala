@@ -15,6 +15,25 @@ id_proof = (
 )
 
 
+class IntershalaAdmin(models.Model):
+    user = models.ForeignKey("user.User", on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=200, default="")
+    last_name = models.CharField(max_length=200)
+    DOB = models.DateField()
+    gender = models.CharField(max_length=10, choices=gender_choices)
+    phone = PhoneField(blank=False, unique=True)
+    alt_phone = PhoneField(blank=False)
+    active = models.BooleanField(default=True)
+    city = models.CharField(max_length=20)
+    state = INStateField(null=True, blank=True)
+    pincode = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "Admin-{}".format(self.first_name)
+
+
 # Create your models here.
 class IntershalaEmployee(models.Model):
     user = models.ForeignKey("user.User", on_delete=models.CASCADE, null=True, blank=True)

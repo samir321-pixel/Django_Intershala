@@ -5,6 +5,12 @@ from recruiter.models import Recruiter
 from job_profile.models import Profile, Skill
 
 
+class IntershalaAdminSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IntershalaAdmin
+        fields = '__all__'
+
+
 class IntershalaStudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
