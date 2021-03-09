@@ -47,3 +47,19 @@ class RecruiterNotificationViewSets(generics.ListAPIView):
             return Response(serializer.data, status=200)
         else:
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
+
+
+class RecruiterProfile(generics.RetrieveAPIView):
+    queryset = Recruiter.objects.all()
+    serializer_class = RecruiterProfileSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        if self.request.user.is_recruiter:
+            recruiter_query = Recruiter.objects.get(user=self.request.user)
+            if recruiter_query.active:
+                serializer = self.get_serializer(recruiter_query)
+                return Response(serializer.data, status=200)
+            elif not recruiter_query.active:
+                return Response({"NO_ACCESS": "Access Denied"}, status=401)
+        else:
+            return Response({"NO_ACCESS": "Access Denied"}, status=401)

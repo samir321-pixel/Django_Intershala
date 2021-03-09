@@ -11,6 +11,12 @@ class RecruiterSignINSerializer(serializers.ModelSerializer):
                   'password', 'pincode', ]
 
 
+class RecruiterProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Recruiter
+        fields = '__all__'
+
+
 class RecruiterNotificationSerializers(serializers.ModelSerializer):
     class Meta:
         model = RecruiterNotification

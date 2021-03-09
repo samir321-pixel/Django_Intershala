@@ -1,0 +1,33 @@
+Afval Zwerfvuil Op Openbare Weg Geen
+{
+  'location': {
+    'geometrie': {
+      'type': 'Point',
+      'coordinates': [
+        4.328700818125686,
+        52.085921024444104
+      ]
+    },
+    'address': {
+      'openbare_ruimte': 'Haagse Bos',
+      'huisnummer': '40',
+      'huisletter': '',
+      'postcode': '2594AW',
+      'streetname': 'Bezuidenhoutseweg',
+      'woonplaats': '',
+      'stadsdeel': 'Haagse Hout'
+    },
+    'stadsdeel': 'Haagse Hout'
+  },
+  'category': {
+    'category_url': 'http://seda-acc-backend-api.seda-acc.svc.appfactory.local:8080/signals/v1/public/terms/categories/Afval/Zwerfvuil/Op Openbare Weg'
+  },
+  'reporter': {
+    'phone': '',
+    'email': '',
+    'sharing_allowed': False
+  },
+  'incident_date_start': '2021-03-09 15:25:10.606797+00:00',
+  'text': 'waste on the street',
+  'source': 'Melding Doen'
+}
