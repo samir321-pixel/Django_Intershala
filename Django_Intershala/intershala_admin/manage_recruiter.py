@@ -81,6 +81,11 @@ class IntershalaRecruiterUpdateView(generics.RetrieveUpdateDestroyAPIView):
             except ObjectDoesNotExist:
                 return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
             instance.active = False
+            user_query = User.objects.get(id=instance.user.id)
+            RecruiterNotification.denied_recruiter(self=self, recruiter=instance,
+                                                   recruiter_name=instance.first_name)
+            user_query.is_recruiter = False
+            user_query.save()
             instance.save()
             return Response({"Recruiter Deactivated": "Access Granted"}, status=200)
         else:
