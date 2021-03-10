@@ -41,5 +41,4 @@ urlpatterns = [
     path('rest-auth/registration/', include('rest_auth.registration.urls')),
     path('intershala_dashboard/', include('intershala_admin.urls')),
     path('job_profile/', include('job_profile.urls')),
-
 ]

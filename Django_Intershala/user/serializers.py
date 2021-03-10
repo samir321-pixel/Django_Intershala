@@ -36,7 +36,6 @@ class CoreRegisterSerializer(RegisterSerializer):
         user.first_name = self.cleaned_data.get('first_name')
         user.save()
         adapter.save_user(request, user, self)
-        print(user)
         return user
 
 

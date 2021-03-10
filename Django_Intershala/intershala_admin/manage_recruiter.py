@@ -55,16 +55,17 @@ class IntershalaRecruiterUpdateView(generics.RetrieveUpdateDestroyAPIView):
                         if serializer.validated_data.get('active'):
                             RecruiterNotification.allow_recruiter(self=self, recruiter=queryset,
                                                                   recruiter_name=queryset.first_name)
+                            serializer.save(updated_at=datetime.now(), active=True)
                         elif not serializer.validated_data.get('active'):
                             RecruiterNotification.denied_recruiter(self=self, recruiter=queryset,
                                                                    recruiter_name=queryset.first_name)
-                        serializer.save(updated_at=datetime.now())
+                            serializer.save(updated_at=datetime.now(), active=False)
                         return Response(serializer.data, status=200)
                     else:
                         return Response(serializer.errors, status=400)
                 except ObjectDoesNotExist:
                     return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
-        except :
+        except:
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
 
     def destroy(self, request, *args, **kwargs):
