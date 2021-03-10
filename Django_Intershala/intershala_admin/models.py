@@ -20,7 +20,7 @@ class IntershalaAdmin(models.Model):
     first_name = models.CharField(max_length=200, null=True, blank=True)
     last_name = models.CharField(max_length=200, null=True, blank=True)
     DOB = models.DateField()
-    email = models.EmailField(max_length=200)
+    email = models.EmailField(max_length=200, blank=True)
     gender = models.CharField(max_length=10, choices=gender_choices)
     phone = PhoneField(blank=False, unique=True)
     alt_phone = PhoneField(blank=False)
@@ -78,7 +78,7 @@ class EmployeeNotification(models.Model):
 
 class AdminNotification(models.Model):
     text = models.TextField()
-    recruiter = models.ForeignKey("recruiter.Recruiter", on_delete=models.CASCADE)
+    recruiter = models.ForeignKey("recruiter.Recruiter", on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     seen = models.BooleanField(default=False)
@@ -90,3 +90,9 @@ class AdminNotification(models.Model):
         AdminNotification.objects.create(recruiter=recruiter,
                                          text="Hello Admin, {} want to collabrate with Intershala.".format(recruiter,
                                                                                                            recruiter_name))
+
+    def admin_added(admin_name):
+        AdminNotification.objects.create(text="New admin, {} has been added to Intershala.".format(admin_name))
+
+    def admin_removed(admin_name):
+        AdminNotification.objects.create(text="Admin, {} has been Removed from Intershala.".format(admin_name))

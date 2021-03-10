@@ -31,6 +31,7 @@ class IntershalaAdminListView(generics.ListAPIView, generics.CreateAPIView):
             if serializer.is_valid(raise_exception=True):
                 serializer.save(first_name=user_query.first_name, last_name=user_query.last_name,
                                 email=user_query.email, active=True)
+                AdminNotification.admin_added(admin_name=user_query.first_name)
                 return Response(serializer.data, status=200)
             else:
                 return Response(serializer.errors, status=401)
@@ -65,11 +66,13 @@ class IntershalaAdminUpdateView(generics.RetrieveUpdateDestroyAPIView):
                 if serializer.is_valid(raise_exception=True):
                     if serializer.validated_data.get('active'):
                         user_query = User.objects.get(id=request.data.get('user'))
+                        AdminNotification.admin_added(admin_name=user_query.first_name)
                         user_query.is_admin = True
                         user_query.save()
                         serializer.save(updated_at=datetime.now(), active=True)
                     elif not serializer.validated_data.get('active'):
                         user_query = User.objects.get(id=request.data.get('user'))
+                        AdminNotification.admin_removed(admin_name=user_query.first_name)
                         user_query.is_admin = False
                         user_query.save()
                         serializer.save(updated_at=datetime.now(), active=False)
@@ -84,6 +87,7 @@ class IntershalaAdminUpdateView(generics.RetrieveUpdateDestroyAPIView):
             try:
                 instance = IntershalaAdmin.objects.get(id=self.kwargs["id"])
                 user_query = User.objects.get(id=instance.user.id)
+                AdminNotification.admin_removed(admin_name=user_query.first_name)
                 user_query.is_admin = False
                 user_query.save()
             except ObjectDoesNotExist:
