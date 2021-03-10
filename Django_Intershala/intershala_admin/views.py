@@ -8,6 +8,7 @@ from job_profile.models import Profile, Skill
 from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.filters import SearchFilter
+from django.contrib.auth import get_user_model
 
 
 class IntershalaAdminViewsets(viewsets.ModelViewSet):
