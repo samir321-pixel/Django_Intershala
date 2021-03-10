@@ -6,7 +6,7 @@ from recruiter.models import Recruiter
 from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.filters import SearchFilter
-
+from user.models import User
 from recruiter.notification_models import RecruiterNotification
 
 
@@ -55,10 +55,16 @@ class IntershalaRecruiterUpdateView(generics.RetrieveUpdateDestroyAPIView):
                         if serializer.validated_data.get('active'):
                             RecruiterNotification.allow_recruiter(self=self, recruiter=queryset,
                                                                   recruiter_name=queryset.first_name)
+                            user_query = User.objects.get(id=queryset.user.id)
+                            user_query.is_recruiter = True
+                            user_query.save()
                             serializer.save(updated_at=datetime.now(), active=True)
                         elif not serializer.validated_data.get('active'):
                             RecruiterNotification.denied_recruiter(self=self, recruiter=queryset,
                                                                    recruiter_name=queryset.first_name)
+                            user_query = User.objects.get(id=queryset.user.id)
+                            user_query.is_recruiter = False
+                            user_query.save()
                             serializer.save(updated_at=datetime.now(), active=False)
                         return Response(serializer.data, status=200)
                     else:

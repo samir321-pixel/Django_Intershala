@@ -12,7 +12,7 @@ class RecruiterNotification(models.Model):
     updated_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "{} {}".format(self.recruiter, self.seen)
+        return "{} {}".format(self.recruiter)
 
     def notify_recruiter(self, student, recruiter, recruiter_name, profile):
         RecruiterNotification.objects.create(recruiter=recruiter,
