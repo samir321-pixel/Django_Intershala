@@ -78,6 +78,7 @@ class EmployeeNotification(models.Model):
 
 class AdminNotification(models.Model):
     text = models.TextField()
+    admin = models.ForeignKey(IntershalaAdmin, on_delete=models.CASCADE, null=True)
     recruiter = models.ForeignKey("recruiter.Recruiter", on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
@@ -91,8 +92,9 @@ class AdminNotification(models.Model):
                                          text="Hello Admin, {} want to collabrate with Intershala.".format(recruiter,
                                                                                                            recruiter_name))
 
-    def admin_added(admin_name):
-        AdminNotification.objects.create(text="New admin, {} has been added to Intershala.".format(admin_name))
+    def admin_added(admin_name, admin):
+        AdminNotification.objects.create(admin=admin,
+                                         text="New admin, {} has been added to Intershala.".format(admin_name))
 
-    def admin_removed(admin_name):
-        AdminNotification.objects.create(text="Admin, {} has been Removed from Intershala.".format(admin_name))
+    def admin_removed(admin_name, admin):
+        AdminNotification.objects.create(admin=admin,text="Admin, {} has been Removed from Intershala.".format(admin_name))

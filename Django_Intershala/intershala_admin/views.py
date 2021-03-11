@@ -29,9 +29,9 @@ class IntershalaAdminListView(generics.ListAPIView, generics.CreateAPIView):
             user_query.is_admin = True
             user_query.save()
             if serializer.is_valid(raise_exception=True):
-                serializer.save(first_name=user_query.first_name, last_name=user_query.last_name,
-                                email=user_query.email, active=True)
-                AdminNotification.admin_added(admin_name=user_query.first_name)
+                data = serializer.save(first_name=user_query.first_name, last_name=user_query.last_name,
+                                       email=user_query.email, active=True)
+                AdminNotification.admin_added(admin_name=user_query.first_name, admin=data)
                 return Response(serializer.data, status=200)
             else:
                 return Response(serializer.errors, status=401)
@@ -66,13 +66,13 @@ class IntershalaAdminUpdateView(generics.RetrieveUpdateDestroyAPIView):
                 if serializer.is_valid(raise_exception=True):
                     if serializer.validated_data.get('active'):
                         user_query = User.objects.get(id=request.data.get('user'))
-                        AdminNotification.admin_added(admin_name=user_query.first_name)
+                        AdminNotification.admin_added(admin_name=user_query.first_name, admin=queryset)
                         user_query.is_admin = True
                         user_query.save()
                         serializer.save(updated_at=datetime.now(), active=True)
                     elif not serializer.validated_data.get('active'):
                         user_query = User.objects.get(id=request.data.get('user'))
-                        AdminNotification.admin_removed(admin_name=user_query.first_name)
+                        AdminNotification.admin_removed(admin_name=user_query.first_name, admin=queryset)
                         user_query.is_admin = False
                         user_query.save()
                         serializer.save(updated_at=datetime.now(), active=False)
