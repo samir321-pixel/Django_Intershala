@@ -18,15 +18,16 @@ id_proof = (
 
 
 class IntershalaCompany(models.Model):
+    id = models.AutoField(primary_key=True)
     company_name = models.CharField(max_length=200, unique=True)
     company_description = models.TextField()
     company_established = models.DateField(auto_now=False)
-    website = models.EmailField()
+    website = models.URLField()
     rating = models.FloatField(default=0)
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
-    recruiter = models.ManyToManyField(Recruiter)
+    recruiter = models.ManyToManyField(Recruiter, null=True, blank=True)
 
     def __str__(self):
         return "{} {}".format(self.company_name, self.active)

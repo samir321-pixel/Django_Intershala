@@ -11,6 +11,12 @@ class IntershalaAdminSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class IntershalaCompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IntershalaCompany
+        fields = '__all__'
+
+
 class IntershalaStudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student

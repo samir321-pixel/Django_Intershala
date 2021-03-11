@@ -1,12 +1,14 @@
 from rest_framework import routers
 from django.urls import path, include
 
+from .manage_company import IntershalaCompanyViewsets
 from .views import *
 from .manage_recruiter import *
 from .admin_notification import *
 
 router = routers.DefaultRouter()
 router.register('intershala_employee', IntershalaEmployeeViewSets, 'intershala_employee ')
+router.register('manage_company', IntershalaCompanyViewsets, 'manage_company ')
 urlpatterns = [
     path(r'', include(router.urls)),
     path('manage_student/', IntershalaStudentViewSets.as_view()),
