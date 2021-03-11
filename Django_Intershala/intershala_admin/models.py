@@ -3,6 +3,8 @@ from phone_field import PhoneField
 from localflavor.in_.models import INStateField
 from djmoney.models.fields import MoneyField
 
+from recruiter.models import Recruiter
+
 gender_choices = (
     ("Male", "Male"),
     ("Female", "Female"),
@@ -13,6 +15,21 @@ id_proof = (
     ("Aadhar Card", "Aadhar Card"),
     ("Pan Card", "Pan Card"),
 )
+
+
+class IntershalaCompany(models.Model):
+    company_name = models.CharField(max_length=200, unique=True)
+    company_description = models.TextField()
+    company_established = models.DateField(auto_now=False)
+    website = models.EmailField()
+    rating = models.FloatField(default=0)
+    active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+    recruiter = models.ManyToManyField(Recruiter)
+
+    def __str__(self):
+        return "{} {}".format(self.company_name, self.active)
 
 
 class IntershalaAdmin(models.Model):
@@ -97,4 +114,5 @@ class AdminNotification(models.Model):
                                          text="New admin, {} has been added to Intershala.".format(admin_name))
 
     def admin_removed(admin_name, admin):
-        AdminNotification.objects.create(admin=admin,text="Admin, {} has been Removed from Intershala.".format(admin_name))
+        AdminNotification.objects.create(admin=admin,
+                                         text="Admin, {} has been Removed from Intershala.".format(admin_name))
