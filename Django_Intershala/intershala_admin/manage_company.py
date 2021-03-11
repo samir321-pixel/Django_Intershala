@@ -8,11 +8,15 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.filters import SearchFilter
 from user.models import User
 from recruiter.notification_models import RecruiterNotification
+from rest_framework.filters import SearchFilter
 
 
 class IntershalaCompanyViewsets(viewsets.ModelViewSet):
     queryset = IntershalaCompany.objects.all()
     serializer_class = IntershalaCompanySerializer
+    permission_classes = [IsAuthenticated, ]
+    filter_backends = [SearchFilter, ]
+    search_fields = ['company_name']
     lookup_field = "id"
 
     def list(self, request, *args, **kwargs):
