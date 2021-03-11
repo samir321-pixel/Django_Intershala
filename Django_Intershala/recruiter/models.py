@@ -14,7 +14,7 @@ class Recruiter(models.Model):
     first_name = models.CharField(max_length=200)
     last_name = models.CharField(max_length=200)
     email = models.EmailField(unique=True)
-    company = models.CharField(max_length=200, unique=True)
+    company = models.ForeignKey("intershala_admin.IntershalaCompany", on_delete=models.CASCADE, related_name="recruiter_company")
     DOB = models.DateField()
     created_profile = models.ManyToManyField("job_profile.Profile", null=True, blank=True, related_name="my_profiles")
     gender = models.CharField(max_length=10, choices=gender_choices, default="Male")

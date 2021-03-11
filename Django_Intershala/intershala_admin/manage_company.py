@@ -31,7 +31,8 @@ class IntershalaCompanyViewsets(viewsets.ModelViewSet):
         if self.request.user.is_admin or self.request.user.is_superuser:
             serializer = self.get_serializer(data=self.request.data)
             if serializer.is_valid(raise_exception=True):
-                serializer.save()
+                data = serializer.save()
+                AdminNotification.company_added(company=data)
                 return Response(serializer.data, status=200)
             else:
                 return Response(serializer.errors, status=401)
@@ -58,7 +59,12 @@ class IntershalaCompanyViewsets(viewsets.ModelViewSet):
                     return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
                 serializer = self.get_serializer(queryset, data=self.request.data, partial=True)
                 if serializer.is_valid(raise_exception=True):
-                    serializer.save(updated_at=datetime.now())
+                    if serializer.validated_data.get('active'):
+                        AdminNotification.company_added(company=queryset)
+                        serializer.save(updated_at=datetime.now(), active=True)
+                    elif not serializer.validated_data.get('active'):
+                        AdminNotification.company_removed(company=queryset)
+                        serializer.save(updated_at=datetime.now(), active=False)
                     return Response(serializer.data, status=200)
                 else:
                     return Response(serializer.errors, status=400)
@@ -72,6 +78,7 @@ class IntershalaCompanyViewsets(viewsets.ModelViewSet):
             except ObjectDoesNotExist:
                 return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
             instance.active = False
+            AdminNotification.admin_removed(company=instance)
             instance.save()
             return Response({"Company Deleted": "Access Granted"}, status=200)
         else:
