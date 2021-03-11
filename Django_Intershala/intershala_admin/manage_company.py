@@ -78,7 +78,7 @@ class IntershalaCompanyViewsets(viewsets.ModelViewSet):
             except ObjectDoesNotExist:
                 return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
             instance.active = False
-            AdminNotification.admin_removed(company=instance)
+            AdminNotification.company_removed(company=instance)
             instance.save()
             return Response({"Company Deleted": "Access Granted"}, status=200)
         else:

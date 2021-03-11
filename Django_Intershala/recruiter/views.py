@@ -5,8 +5,9 @@ from .serializers import *
 from rest_framework import viewsets, generics
 from rest_framework.permissions import IsAuthenticated
 from django.db import IntegrityError
-
 from intershala_admin.models import AdminNotification
+
+from intershala_admin.models import IntershalaCompany
 
 
 class RecruiterSignin(generics.CreateAPIView):
@@ -26,6 +27,8 @@ class RecruiterSignin(generics.CreateAPIView):
             data = serializer.save(user=user, active=False)
             recruiter_query = Recruiter.objects.get(id=data.id)
             if data:
+                company_query = IntershalaCompany.objects.get(id=self.request.data.get('company'))
+                company_query.recruiter.add(data)
                 AdminNotification.notify_admin(recruiter=recruiter_query,
                                                recruiter_name=self.request.data.get('first_name'))
             return Response(serializer.data, status=200)
