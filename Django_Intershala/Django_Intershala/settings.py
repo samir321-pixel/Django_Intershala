@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'job_profile',
     'intershala_admin',
     'drf_yasg',
+    'feedback',
 ]
 SITE_ID = 1
 MIDDLEWARE = [
