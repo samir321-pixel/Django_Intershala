@@ -32,7 +32,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
         else:
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
 
-    def perform_create(self, serializer):
+    def create(self, request, *args, **kwargs):
         try:
             if self.request.user.is_recruiter:
                 recruiter_query = Recruiter.objects.get(user=self.request.user.id)

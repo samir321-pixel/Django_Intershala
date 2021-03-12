@@ -192,7 +192,7 @@ class IntershalaSkillViewSets(generics.ListCreateAPIView):
     search_fields = ['skill_name', 'active']
 
     def list(self, request, *args, **kwargs):
-        if self.request.user.is_employee or self.request.user.is_superuser or self.request.user.is_admin:
+        if self.request.user.is_employee or self.request.user.is_superuser or self.request.user.is_admin or self.request.user.is_recruiter:
             queryset = self.get_queryset()
             queryset = self.filter_queryset(queryset)
             queryset = self.filter_queryset(queryset)
@@ -202,7 +202,7 @@ class IntershalaSkillViewSets(generics.ListCreateAPIView):
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
 
     def create(self, request, *args, **kwargs):
-        if self.request.user.is_employee or self.request.user.is_superuser or self.request.user.is_admin:
+        if self.request.user.is_employee or self.request.user.is_superuser or self.request.user.is_admin or self.request.user.is_recruiter:
             serializer = IntershalaSkillReadSerializer(data=request.data)
             if serializer.is_valid(raise_exception=True):
                 serializer.save(active=True)
@@ -220,7 +220,7 @@ class IntershalaSkillUpdateViewSets(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = "id"
 
     def retrieve(self, request, *args, **kwargs):
-        if self.request.user.is_admin or self.request.user.is_employee or self.request.user.is_superuser:
+        if self.request.user.is_admin or self.request.user.is_employee or self.request.user.is_superuser or self.request.user.is_recruiter:
             try:
                 queryset = Skill.objects.get(id=self.kwargs["id"])
                 serializer = self.get_serializer(queryset)
@@ -232,7 +232,7 @@ class IntershalaSkillUpdateViewSets(generics.RetrieveUpdateDestroyAPIView):
 
     def update(self, request, *args, **kwargs):
         try:
-            if self.request.user.is_admin or self.request.user.is_employee or self.request.user.is_superuser:
+            if self.request.user.is_admin or self.request.user.is_employee or self.request.user.is_superuser or self.request.user.is_recruiter:
                 try:
                     queryset = Skill.objects.get(id=self.kwargs["id"])
                     serializer = self.get_serializer(queryset, data=self.request.data, partial=True)
@@ -252,8 +252,9 @@ class IntershalaSkillUpdateViewSets(generics.RetrieveUpdateDestroyAPIView):
                 instance = self.queryset.get(id=self.kwargs["id"])
             except ObjectDoesNotExist:
                 return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
-            instance.delete()
-            return Response({"Skill Deleted": "Access Granted"}, status=200)
+            instance.active = False
+            instance.save()
+            return Response({"Skill Deactivate": "Access Granted"}, status=200)
         else:
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
 

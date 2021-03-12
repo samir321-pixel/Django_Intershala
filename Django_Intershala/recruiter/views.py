@@ -20,6 +20,8 @@ class RecruiterSignin(generics.CreateAPIView):
         try:
             user = User.objects.create_user(username=self.request.data['first_name'],
                                             password=self.request.data['password'],
+                                            first_name=self.request.data['first_name'],
+                                            last_name=self.request.data['last_name'],
                                             email=self.request.data['email'],
                                             is_recruiter=False)
         except IntegrityError:

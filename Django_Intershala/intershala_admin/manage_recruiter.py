@@ -9,6 +9,8 @@ from rest_framework.filters import SearchFilter
 from user.models import User
 from recruiter.notification_models import RecruiterNotification
 
+from job_profile.models import Profile
+
 
 class IntershalaRecruiterListView(generics.ListAPIView):
     queryset = Recruiter.objects.all().order_by('-created_at')
@@ -62,6 +64,9 @@ class IntershalaRecruiterUpdateView(generics.RetrieveUpdateDestroyAPIView):
                         elif not serializer.validated_data.get('active'):
                             RecruiterNotification.denied_recruiter(self=self, recruiter=queryset,
                                                                    recruiter_name=queryset.first_name)
+                            for i in Profile.objects.filter(recruiter=queryset):
+                                i.active = False
+                                i.save()
                             user_query = User.objects.get(id=queryset.user.id)
                             user_query.is_recruiter = False
                             user_query.save()
