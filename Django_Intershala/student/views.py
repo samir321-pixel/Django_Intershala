@@ -22,7 +22,10 @@ class CreateStudent(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         try:
-            user = User.objects.create_user(username=self.request.data['phone'], password=self.request.data['phone'],
+            user = User.objects.create_user(username=self.request.data['first_name'],
+                                            last_name=self.request.data['last_name'],
+                                            first_name=self.request.data['first_name'],
+                                            password=self.request.data['phone'],
                                             email=self.request.data['email'],
                                             is_student=True)
         except IntegrityError:

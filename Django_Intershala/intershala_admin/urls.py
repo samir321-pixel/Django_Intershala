@@ -1,7 +1,7 @@
 from rest_framework import routers
 from django.urls import path, include
 
-from .manage_company import IntershalaCompanyViewsets
+from .manage_company import *
 from .views import *
 from .manage_recruiter import *
 from .admin_notification import *
@@ -23,4 +23,5 @@ urlpatterns = [
     path('manage_profile/', IntershalaJobProfileViewSets.as_view()),
     path('manage_skill/', IntershalaSkillViewSets.as_view()),
     path('manage_skill/<int:id>/', IntershalaSkillUpdateViewSets.as_view()),
+    path('company_review/', CompanyReviewViewsets.as_view()),
 ]

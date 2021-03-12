@@ -10,6 +10,8 @@ from user.models import User
 from recruiter.notification_models import RecruiterNotification
 from rest_framework.filters import SearchFilter
 
+from student.models import Student
+
 
 class IntershalaCompanyViewsets(viewsets.ModelViewSet):
     queryset = IntershalaCompany.objects.all()
@@ -81,5 +83,23 @@ class IntershalaCompanyViewsets(viewsets.ModelViewSet):
             AdminNotification.company_removed(company=instance)
             instance.save()
             return Response({"Company Deleted": "Access Granted"}, status=200)
+        else:
+            return Response({"NO_ACCESS": "Access Denied"}, status=401)
+
+
+class CompanyReviewViewsets(generics.ListCreateAPIView):
+    queryset = CompanyReview.objects.all().order_by('created_at')
+    serializer_class = CompanyReviewSerializer
+    permission_classes = [IsAuthenticated, ]
+
+    def create(self, request, *args, **kwargs):
+        if self.request.user.is_student:
+            serializer = self.get_serializer(data=self.request.data)
+            if serializer.is_valid(raise_exception=True):
+                student_query=Student.objects.get(user=self.request.user)
+                serializer.save(student=student_query)
+                return Response(serializer.data, status=200)
+            else:
+                return Response(serializer.errors, status=401)
         else:
             return Response({"NO_ACCESS": "Access Denied"}, status=401)

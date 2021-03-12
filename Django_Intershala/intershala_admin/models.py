@@ -2,7 +2,7 @@ from django.db import models
 from phone_field import PhoneField
 from localflavor.in_.models import INStateField
 from djmoney.models.fields import MoneyField
-
+from django.core.validators import MinValueValidator, MaxValueValidator
 from recruiter.models import Recruiter
 
 gender_choices = (
@@ -23,7 +23,7 @@ class IntershalaCompany(models.Model):
     company_description = models.TextField()
     company_established = models.DateField(auto_now=False)
     website = models.URLField()
-    rating = models.FloatField(default=0)
+    overall_rating = models.FloatField(default=0)
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
@@ -133,6 +133,7 @@ class CompanyReview(models.Model):
     id = models.AutoField(primary_key=True)
     company = models.ForeignKey(IntershalaCompany, on_delete=models.CASCADE)
     student = models.ForeignKey("student.Student", on_delete=models.CASCADE)
+    rating = models.FloatField(validators=[MinValueValidator(0), MaxValueValidator(5)])
     message = models.TextField()
     created_at = models.DateTimeField(auto_now=True)
 
