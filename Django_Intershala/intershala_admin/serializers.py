@@ -4,6 +4,8 @@ from student.models import Student
 from recruiter.models import Recruiter
 from job_profile.models import Profile, Skill
 
+from job_profile.serializers import ProfileReadSerializer
+
 
 class IntershalaAdminSerializer(serializers.ModelSerializer):
     class Meta:
@@ -59,6 +61,8 @@ class IntershalaRecruiterSerializer(serializers.ModelSerializer):
 
 
 class IntershalaJobProfileReadSerializer(serializers.ModelSerializer):
+    sallery = serializers.CharField(max_length=200)
+
     class Meta:
         model = Profile
         fields = '__all__'
