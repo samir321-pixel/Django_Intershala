@@ -34,3 +34,4 @@ class RecruiterNotification(models.Model):
             count = RecruiterNotification.objects.filter(recruiter=i, seen=False).count()
             i.unseen_notification = count
             i.save()
+
