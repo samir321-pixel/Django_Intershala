@@ -30,7 +30,8 @@ class IntershalaCompany(models.Model):
     recruiter = models.ManyToManyField(Recruiter, null=True, blank=True)
 
     def __str__(self):
-        return "{} {}".format(self.company_name, self.active)
+        # return "{} {}".format(self.company_name, self.active)
+        return self.company_name
 
 
 class IntershalaAdmin(models.Model):
@@ -126,3 +127,14 @@ class AdminNotification(models.Model):
     def company_removed(company):
         AdminNotification.objects.create(company=company,
                                          text="Admin, {} has been Removed from Intershala.".format(company))
+
+
+class CompanyReview(models.Model):
+    id = models.AutoField(primary_key=True)
+    company = models.ForeignKey(IntershalaCompany, on_delete=models.CASCADE)
+    student = models.ForeignKey("student.Student", on_delete=models.CASCADE)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.company
