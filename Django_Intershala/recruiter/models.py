@@ -25,6 +25,7 @@ class Recruiter(models.Model):
     city = models.CharField(max_length=20)
     state = models.CharField(max_length=200)
     password = models.CharField(max_length=30)
+    overall_rating = models.FloatField(default=0)
     pincode = models.CharField(("pin code"), max_length=7, default="00000")
     created_at = models.DateTimeField(auto_now=True)
     unseen_notification = models.IntegerField(default=0)
@@ -32,8 +33,22 @@ class Recruiter(models.Model):
     def __str__(self):
         return "{} {}".format(self.user, self.first_name)
 
+    def rating_counter(self, recruiter_id):
+        count = RecruiterReview.objects.filter(id=recruiter_id).count()
+        if count == 0:
+            count = 1
+        else:
+            count
+        total = 0
+        for i in RecruiterReview.objects.filter(id=recruiter_id):
+            total = i.rating + total
+        overall_rating = total / count
+        recruiter_query = Recruiter.objects.get(id=recruiter_id)
+        recruiter_query.overall_rating = overall_rating
+        recruiter_query.save()
 
-class RecruiterRating(models.Model):
+
+class RecruiterReview(models.Model):
     recruiter = models.ForeignKey(Recruiter, on_delete=models.CASCADE)
     student = models.ForeignKey("student.Student", on_delete=models.CASCADE)
     rating = models.FloatField(validators=[MinValueValidator(0), MaxValueValidator(5)])

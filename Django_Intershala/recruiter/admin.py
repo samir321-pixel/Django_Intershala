@@ -15,4 +15,4 @@ class RecruiterReviewAdmin(admin.ModelAdmin):
 
 admin.site.register(Recruiter)
 admin.site.register(RecruiterNotification)
-admin.site.register(RecruiterRating, RecruiterReviewAdmin)
+admin.site.register(RecruiterReview, RecruiterReviewAdmin)

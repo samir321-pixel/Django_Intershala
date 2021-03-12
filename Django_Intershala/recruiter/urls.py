@@ -9,4 +9,5 @@ urlpatterns = [
     path('recruiter_notification/', RecruiterNotificationViewSets.as_view()),
     path('recruiter_signup/', RecruiterSignin.as_view()),
     path('recruiter_profile/', RecruiterProfile.as_view()),
+    path('recruiter_rating/', RecruiterReviewViewsets.as_view()),
 ]

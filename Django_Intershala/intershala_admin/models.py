@@ -30,11 +30,14 @@ class IntershalaCompany(models.Model):
     recruiter = models.ManyToManyField(Recruiter, null=True, blank=True)
 
     def __str__(self):
-        # return "{} {}".format(self.company_name, self.active)
         return self.company_name
 
     def rating_counter(self, company_id):
         count = CompanyReview.objects.filter(id=company_id).count()
+        if count == 0:
+            count = 1
+        else:
+            count
         total = 0
         for i in CompanyReview.objects.filter(id=company_id):
             total = i.rating + total
