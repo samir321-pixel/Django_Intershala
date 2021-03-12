@@ -33,6 +33,16 @@ class IntershalaCompany(models.Model):
         # return "{} {}".format(self.company_name, self.active)
         return self.company_name
 
+    def rating_counter(self, company_id):
+        count = CompanyReview.objects.filter(id=company_id).count()
+        total = 0
+        for i in CompanyReview.objects.filter(id=company_id):
+            total = i.rating + total
+        overall_rating = total / count
+        company_query = IntershalaCompany.objects.get(id=company_id)
+        company_query.overall_rating = overall_rating
+        company_query.save()
+
 
 class IntershalaAdmin(models.Model):
     user = models.ForeignKey("user.User", on_delete=models.CASCADE)
@@ -138,4 +148,4 @@ class CompanyReview(models.Model):
     created_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.company
+        return str(self.rating)

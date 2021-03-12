@@ -2,12 +2,8 @@ from datetime import datetime
 from rest_framework import generics, viewsets
 from rest_framework.permissions import IsAuthenticated
 from .serializers import *
-from recruiter.models import Recruiter
 from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
-from rest_framework.filters import SearchFilter
-from user.models import User
-from recruiter.notification_models import RecruiterNotification
 from rest_framework.filters import SearchFilter
 
 from student.models import Student
@@ -96,10 +92,20 @@ class CompanyReviewViewsets(generics.ListCreateAPIView):
         if self.request.user.is_student:
             serializer = self.get_serializer(data=self.request.data)
             if serializer.is_valid(raise_exception=True):
-                student_query=Student.objects.get(user=self.request.user)
+                student_query = Student.objects.get(user=self.request.user)
                 serializer.save(student=student_query)
+                IntershalaCompany.rating_counter(self=self,company_id=serializer.validated_data.get('company').id)
                 return Response(serializer.data, status=200)
             else:
                 return Response(serializer.errors, status=401)
+        else:
+            return Response({"NO_ACCESS": "Access Denied"}, status=401)
+
+    def list(self, request, *args, **kwargs):
+        if self.request.user.is_student:
+            queryset = CompanyReview.objects.filter(student=Student.objects.get(user=self.request.user)).order_by(
+                'created_at')
+            serializer = self.get_serializer(queryset, many=True)
+            return Response(serializer.data, status=200)
         else:
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
