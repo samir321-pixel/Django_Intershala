@@ -75,3 +75,13 @@ class StudentNotification(models.Model):
             count = StudentNotification.objects.filter(student=i, seen=False).count()
             i.unseen_notification = count
             i.save()
+
+    def removed_student(self, student, student_name, ):
+        StudentNotification.objects.create(student=student,
+                                           message="Hello {}, Sorry to inform you but your profile has been deactivated from intershala as u have didnt follow intershala rules and regulation. please contact intershala admin support.".format(
+                                               student_name))
+
+    def updated_student(self, student, student_name, ):
+        StudentNotification.objects.create(student=student,
+                                           message="Hello {}, Your profile is now activated.".format(
+                                               student_name))

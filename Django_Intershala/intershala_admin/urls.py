@@ -12,6 +12,7 @@ router.register('manage_company', IntershalaCompanyViewsets, 'manage_company ')
 urlpatterns = [
     path(r'', include(router.urls)),
     path('manage_student/', IntershalaStudentViewSets.as_view()),
+    path('manage_student/<int:id>/', IntershalaStudentUpdateViewSets.as_view()),
     path('manage_recruiter/', IntershalaRecruiterListView.as_view()),
     path('manage_recruiter/<int:id>/', IntershalaRecruiterUpdateView.as_view()),
     path('manage_admin/', IntershalaAdminListView.as_view()),

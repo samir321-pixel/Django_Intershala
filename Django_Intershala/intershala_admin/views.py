@@ -9,6 +9,8 @@ from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.filters import SearchFilter
 
+from student.models import StudentNotification
+
 
 class IntershalaAdminListView(generics.ListAPIView, generics.CreateAPIView):
     queryset = IntershalaAdmin.objects.all()
@@ -98,11 +100,10 @@ class IntershalaAdminUpdateView(generics.RetrieveUpdateDestroyAPIView):
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
 
 
-class IntershalaStudentViewSets(generics.ListAPIView, generics.DestroyAPIView):
+class IntershalaStudentViewSets(generics.ListAPIView):
     queryset = Student.objects.all().order_by('-created_at')
     serializer_class = IntershalaStudentSerializer
     permission_classes = (IsAuthenticated,)
-    lookup_field = "id"
     filter_backends = [SearchFilter, ]
     search_fields = ['first_name', 'email']
 
@@ -115,13 +116,66 @@ class IntershalaStudentViewSets(generics.ListAPIView, generics.DestroyAPIView):
         else:
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
 
+
+class IntershalaStudentUpdateViewSets(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Student.objects.all().order_by('-created_at')
+    serializer_class = IntershalaStudentSerializer
+    permission_classes = (IsAuthenticated,)
+    lookup_field = "id"
+
+    def retrieve(self, request, *args, **kwargs):
+        if self.request.user.is_admin or self.request.user.is_employee or self.request.user.is_superuser:
+            try:
+                queryset = Student.objects.get(id=self.kwargs["id"])
+                serializer = self.get_serializer(queryset)
+                return Response(serializer.data, status=200)
+            except:
+                return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
+        else:
+            return Response({"NO_ACCESS": "Access Denied"}, status=401)
+
+    def update(self, request, *args, **kwargs):
+        try:
+            if self.request.user.is_admin or self.request.user.is_employee or self.request.user.is_superuser:
+                try:
+                    queryset = Student.objects.get(id=self.kwargs["id"])
+                    serializer = self.get_serializer(queryset, data=self.request.data, partial=True)
+                    if serializer.is_valid(raise_exception=True):
+                        if serializer.validated_data.get('active'):
+                            StudentNotification.updated_student(self=self, student=queryset,
+                                                                  student_name=queryset.first_name)
+                            user_query = User.objects.get(id=queryset.user.id)
+                            user_query.is_student = True
+                            user_query.save()
+                            serializer.save(updated_at=datetime.now(), active=True)
+                        elif not serializer.validated_data.get('active'):
+                            StudentNotification.removed_student(self=self, student=queryset,
+                                                                   student_name=queryset.first_name)
+                            user_query = User.objects.get(id=queryset.user.id)
+                            user_query.is_student = False
+                            user_query.save()
+                            serializer.save(updated_at=datetime.now(), active=False)
+                        return Response(serializer.data, status=200)
+                    else:
+                        return Response(serializer.errors, status=400)
+                except ObjectDoesNotExist:
+                    return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
+        except:
+            return Response({"NO_ACCESS": "Access Denied"}, status=401)
+
     def destroy(self, request, *args, **kwargs):
         if self.request.user.is_employee or self.request.user.is_superuser or self.request.user.is_admin:
             try:
                 instance = self.queryset.get(id=self.kwargs["id"])
             except ObjectDoesNotExist:
                 return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
-            instance.delete()
+            instance.active = False
+            instance.save()
+            StudentNotification.removed_student(self=self, student=instance,
+                                                student_name=instance.first_name)
+            user_query = User.objects.get(id=instance.user.id)
+            user_query.is_student = False
+            user_query.save()
             return Response({"Student Deleted": "Access Granted"}, status=200)
         else:
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
@@ -171,6 +225,7 @@ class IntershalaJobProfileViewSets(generics.ListAPIView, generics.DestroyAPIView
                     return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
         except:
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
+
 
     def destroy(self, request, *args, **kwargs):
         if self.request.user.is_employee or self.request.user.is_superuser or self.request.user.is_admin:
