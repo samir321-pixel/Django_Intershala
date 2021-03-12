@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 # Create your models here.
 
@@ -14,7 +15,8 @@ class Recruiter(models.Model):
     first_name = models.CharField(max_length=200)
     last_name = models.CharField(max_length=200)
     email = models.EmailField(unique=True)
-    company = models.ForeignKey("intershala_admin.IntershalaCompany", on_delete=models.CASCADE, related_name="recruiter_company")
+    company = models.ForeignKey("intershala_admin.IntershalaCompany", on_delete=models.CASCADE,
+                                related_name="recruiter_company")
     DOB = models.DateField()
     created_profile = models.ManyToManyField("job_profile.Profile", null=True, blank=True, related_name="my_profiles")
     gender = models.CharField(max_length=10, choices=gender_choices, default="Male")
@@ -29,3 +31,14 @@ class Recruiter(models.Model):
 
     def __str__(self):
         return "{} {}".format(self.user, self.first_name)
+
+
+class RecruiterRating(models.Model):
+    recruiter = models.ForeignKey(Recruiter, on_delete=models.CASCADE)
+    student = models.ForeignKey("student.Student", on_delete=models.CASCADE)
+    rating = models.FloatField(validators=[MinValueValidator(0), MaxValueValidator(5)])
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.rating)

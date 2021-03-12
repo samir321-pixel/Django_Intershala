@@ -24,6 +24,7 @@ class Student(models.Model):
     applied_application = models.ManyToManyField("student.StudentApplication", null=True, blank=True,
                                                  related_name="my_application")
     active = models.BooleanField(default=True)
+    password = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
