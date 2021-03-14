@@ -20,7 +20,7 @@ class CreateStudent(generics.CreateAPIView):
     serializer_class = StudentSerializer
     lookup_field = "id"
 
-    def perform_create(self, serializer):
+    def create(self, request, *args, **kwargs):
         try:
             user = User.objects.create_user(username=self.request.data['first_name'],
                                             last_name=self.request.data['last_name'],

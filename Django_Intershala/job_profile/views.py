@@ -12,7 +12,7 @@ from student.models import StudentApplication
 
 class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
+    serializer_class = ProfileReadSerializer
     filter_backends = [SearchFilter, ]
     search_fields = ['profile_name', 'experience', 'employment_type', 'schedule', 'location', 'recruiter__company']
     lookup_field = "id"
@@ -37,9 +37,9 @@ class ProfileViewSet(viewsets.ModelViewSet):
             if self.request.user.is_recruiter:
                 recruiter_query = Recruiter.objects.get(user=self.request.user.id)
                 if recruiter_query.active:
-                    serializer = self.get_serializer(data=self.request.data)
+                    serializer = ProfileSerializer(data=self.request.data)
                     if serializer.is_valid(raise_exception=True):
-                        data = serializer.save(recruiter=Recruiter.objects.get(user=self.request.user.id), active=True)
+                        data = serializer.save(recruiter=recruiter_query, active=True)
                         recruiter_query = Recruiter.objects.get(user=self.request.user.id)
                         recruiter_query.created_profile.add(data)
                         return Response(serializer.data, status=200)
@@ -57,7 +57,8 @@ class ProfileViewSet(viewsets.ModelViewSet):
                                                recruiter=Recruiter.objects.get(user=self.request.user.id))
             except ObjectDoesNotExist:
                 return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
-            serializer = self.get_serializer(instance, data=self.request.data, partial=True)
+            print(instance, 'check here')
+            serializer = ProfileSerializer(instance, data=self.request.data, partial=True)
             if serializer.is_valid(raise_exception=True):
                 recruiter_query = Recruiter.objects.get(user=self.request.user.id)
                 if recruiter_query.active:
@@ -135,7 +136,7 @@ class StudentApplicationsViewSet(generics.RetrieveUpdateAPIView):
 
 class AssessmentQuestionViewsets(viewsets.ModelViewSet):
     queryset = Assessment_question.objects.all().order_by('-created_at')
-    serializer_class = AssessmentQuestionSerializer
+    serializer_class = AssessmentReadQuestionSerializer
     lookup_field = "id"
 
     def list(self, request, *args, **kwargs):
@@ -151,7 +152,7 @@ class AssessmentQuestionViewsets(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         try:
             if self.request.user.is_recruiter:
-                serializer = self.get_serializer(data=self.request.data)
+                serializer = AssessmentWriteQuestionSerializer(data=self.request.data)
                 if serializer.is_valid(raise_exception=True):
                     data = serializer.save(recruiter=Recruiter.objects.get(user=self.request.user.id), active=True)
                     profile_query = Profile.objects.get(id=self.request.data.get('profile'))
@@ -169,7 +170,7 @@ class AssessmentQuestionViewsets(viewsets.ModelViewSet):
                                                            recruiter=Recruiter.objects.get(user=self.request.user.id))
             except ObjectDoesNotExist:
                 return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
-            serializer = self.get_serializer(instance, data=self.request.data, partial=True)
+            serializer = AssessmentWriteQuestionSerializer(instance, data=self.request.data, partial=True)
             if serializer.is_valid(raise_exception=True):
                 serializer.save(updated_at=datetime.datetime.now())
                 return Response(serializer.data)

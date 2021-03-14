@@ -28,7 +28,7 @@ class Profile(models.Model):
         ('Part_Time', 'Part_time')
     )
     id = models.AutoField(primary_key=True)
-    recruiter = models.ForeignKey("recruiter.Recruiter", on_delete=models.CASCADE)
+    recruiter = models.ForeignKey("recruiter.Recruiter", on_delete=models.CASCADE, null=True)
     profile_name = models.CharField(max_length=100)
     experience = models.IntegerField(default=0)
     skills = models.ManyToManyField(Skill, null=True, blank=True)
@@ -88,9 +88,9 @@ class Profile(models.Model):
 
 class Assessment_question(models.Model):
     id = models.AutoField(primary_key=True)
-    profile = models.ForeignKey("job_profile.Profile", on_delete=models.CASCADE, related_name='profile_questions')
     recruiter = models.ForeignKey("recruiter.Recruiter", on_delete=models.CASCADE)
     question = models.TextField(max_length=5000)
+    profile = models.ForeignKey("job_profile.Profile", on_delete=models.CASCADE, related_name='profile_questions')
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True)

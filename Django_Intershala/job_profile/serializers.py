@@ -33,7 +33,16 @@ class SkillSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class AssessmentQuestionSerializer(serializers.ModelSerializer):
+class AssessmentWriteQuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Assessment_question
         fields = '__all__'
+
+
+class AssessmentReadQuestionSerializer(serializers.ModelSerializer):
+    profile = ProfileSerializer()
+
+    class Meta:
+        model = Assessment_question
+        fields = '__all__'
+        depth = 0
