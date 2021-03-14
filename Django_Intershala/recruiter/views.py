@@ -79,8 +79,13 @@ class RecruiterProfile(generics.RetrieveAPIView, generics.RetrieveUpdateAPIView)
             recruiter_query = Recruiter.objects.get(user=self.request.user)
             if recruiter_query.active:
                 serializer = self.get_serializer(recruiter_query, data=self.request.data, partial=True)
+                user_query = User.objects.get(id=self.request.user.id)
                 if serializer.is_valid(raise_exception=True):
-                    serializer.save(updated_at=datetime.now())
+                    data = serializer.save(updated_at=datetime.now())
+                    user_query.username = data.first_name
+                    user_query.first_name = data.first_name
+                    user_query.last_name = data.last_name
+                    user_query.save()
                     return Response(serializer.data, status=200)
                 else:
                     return Response(serializer.errors, status=400)

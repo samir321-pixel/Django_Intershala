@@ -245,13 +245,10 @@ class IntershalaSkillViewSets(generics.ListCreateAPIView):
     search_fields = ['skill_name', 'active']
 
     def list(self, request, *args, **kwargs):
-        if self.request.user.is_employee or self.request.user.is_superuser or self.request.user.is_admin or self.request.user.is_recruiter:
-            queryset = self.get_queryset()
-            queryset = self.filter_queryset(queryset)
-            serializer = self.get_serializer(queryset, many=True)
-            return Response(serializer.data, status=200)
-        else:
-            return Response({"NO_ACCESS": "Access Denied"}, status=401)
+        queryset = self.get_queryset()
+        queryset = self.filter_queryset(queryset)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=200)
 
     def create(self, request, *args, **kwargs):
         if self.request.user.is_employee or self.request.user.is_superuser or self.request.user.is_admin or self.request.user.is_recruiter:

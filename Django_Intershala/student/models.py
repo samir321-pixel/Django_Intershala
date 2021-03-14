@@ -13,7 +13,7 @@ GENDER_CHOICES = (
 class Student(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey('user.User', on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=100, unique=True)
     last_name = models.CharField(max_length=100, null=True, blank=True)
     date_of_birth = models.DateField(auto_now=False)
     gender = models.CharField(choices=GENDER_CHOICES, max_length=30, default="Male")

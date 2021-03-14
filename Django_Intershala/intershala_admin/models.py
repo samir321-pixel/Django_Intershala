@@ -70,9 +70,9 @@ class IntershalaAdmin(models.Model):
 # Create your models here.
 class IntershalaEmployee(models.Model):
     user = models.ForeignKey("user.User", on_delete=models.CASCADE, null=True, blank=True)
-    first_name = models.CharField(max_length=200, default="")
-    middle_name = models.CharField(max_length=200, default="", )
-    last_name = models.CharField(max_length=200, default="", null=True, blank=True)
+    first_name = models.CharField(max_length=200, unique=True)
+    middle_name = models.CharField(max_length=200)
+    last_name = models.CharField(max_length=200)
     DOB = models.DateField()
     gender = models.CharField(max_length=10, choices=gender_choices)
     phone = PhoneField(blank=False, unique=True)

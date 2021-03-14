@@ -12,7 +12,7 @@ gender_choices = (
 
 class Recruiter(models.Model):
     user = models.OneToOneField("user.User", on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=200)
+    first_name = models.CharField(max_length=200, unique=True)
     last_name = models.CharField(max_length=200)
     email = models.EmailField(unique=True)
     company = models.ForeignKey("intershala_admin.IntershalaCompany", on_delete=models.CASCADE,
