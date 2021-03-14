@@ -28,6 +28,7 @@ class Recruiter(models.Model):
     overall_rating = models.FloatField(default=0)
     pincode = models.CharField(("pin code"), max_length=7, default="00000")
     created_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
     unseen_notification = models.IntegerField(default=0)
 
     def __str__(self):

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from user.models import User
 from .models import *
 from rest_framework.response import Response
@@ -56,9 +58,10 @@ class RecruiterNotificationViewSets(generics.ListAPIView):
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
 
 
-class RecruiterProfile(generics.RetrieveAPIView):
+class RecruiterProfile(generics.RetrieveAPIView, generics.RetrieveUpdateAPIView):
     queryset = Recruiter.objects.all()
     serializer_class = RecruiterProfileSerializer
+    lookup_field = "id"
 
     def retrieve(self, request, *args, **kwargs):
         if self.request.user.is_recruiter:
@@ -66,6 +69,21 @@ class RecruiterProfile(generics.RetrieveAPIView):
             if recruiter_query.active:
                 serializer = self.get_serializer(recruiter_query)
                 return Response(serializer.data, status=200)
+            elif not recruiter_query.active:
+                return Response({"NO_ACCESS": "Access Denied"}, status=401)
+        else:
+            return Response({"NO_ACCESS": "Access Denied"}, status=401)
+
+    def update(self, request, *args, **kwargs):
+        if self.request.user.is_recruiter:
+            recruiter_query = Recruiter.objects.get(user=self.request.user)
+            if recruiter_query.active:
+                serializer = self.get_serializer(recruiter_query, data=self.request.data, partial=True)
+                if serializer.is_valid(raise_exception=True):
+                    serializer.save(updated_at=datetime.now())
+                    return Response(serializer.data, status=200)
+                else:
+                    return Response(serializer.errors, status=400)
             elif not recruiter_query.active:
                 return Response({"NO_ACCESS": "Access Denied"}, status=401)
         else:
