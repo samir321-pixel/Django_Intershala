@@ -9,7 +9,7 @@ from student.models import StudentApplication
 class Skill(models.Model):
     id = models.AutoField(primary_key=True)
     skill_name = models.CharField(max_length=100, unique=True)
-    user=models.ForeignKey("user.User", on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey("user.User", on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True)
@@ -30,6 +30,7 @@ class Profile(models.Model):
     id = models.AutoField(primary_key=True)
     recruiter = models.ForeignKey("recruiter.Recruiter", on_delete=models.CASCADE, null=True)
     profile_name = models.CharField(max_length=100)
+    company = models.ForeignKey("intershala_admin.IntershalaCompany", on_delete=models.CASCADE, null=True)
     experience = models.IntegerField(default=0)
     skills = models.ManyToManyField(Skill, null=True, blank=True)
     sallery = MoneyField(default=0, default_currency='INR', max_digits=11, null=True, blank=True)
