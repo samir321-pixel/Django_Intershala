@@ -9,6 +9,7 @@ from student.models import StudentApplication
 class Skill(models.Model):
     id = models.AutoField(primary_key=True)
     skill_name = models.CharField(max_length=100, unique=True)
+    user=models.ForeignKey("user.User", on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True)

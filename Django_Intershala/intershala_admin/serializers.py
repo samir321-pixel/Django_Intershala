@@ -72,3 +72,10 @@ class IntershalaSkillReadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Skill
         fields = '__all__'
+        depth = 1
+
+
+class IntershalaWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Skill
+        fields = '__all__'

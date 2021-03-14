@@ -143,14 +143,14 @@ class IntershalaStudentUpdateViewSets(generics.RetrieveUpdateDestroyAPIView):
                     if serializer.is_valid(raise_exception=True):
                         if serializer.validated_data.get('active'):
                             StudentNotification.updated_student(self=self, student=queryset,
-                                                                  student_name=queryset.first_name)
+                                                                student_name=queryset.first_name)
                             user_query = User.objects.get(id=queryset.user.id)
                             user_query.is_student = True
                             user_query.save()
                             serializer.save(updated_at=datetime.now(), active=True)
                         elif not serializer.validated_data.get('active'):
                             StudentNotification.removed_student(self=self, student=queryset,
-                                                                   student_name=queryset.first_name)
+                                                                student_name=queryset.first_name)
                             user_query = User.objects.get(id=queryset.user.id)
                             user_query.is_student = False
                             user_query.save()
@@ -225,7 +225,6 @@ class IntershalaJobProfileViewSets(generics.ListAPIView, generics.DestroyAPIView
         except:
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
 
-
     def destroy(self, request, *args, **kwargs):
         if self.request.user.is_employee or self.request.user.is_superuser or self.request.user.is_admin:
             try:
@@ -249,7 +248,6 @@ class IntershalaSkillViewSets(generics.ListCreateAPIView):
         if self.request.user.is_employee or self.request.user.is_superuser or self.request.user.is_admin or self.request.user.is_recruiter:
             queryset = self.get_queryset()
             queryset = self.filter_queryset(queryset)
-            queryset = self.filter_queryset(queryset)
             serializer = self.get_serializer(queryset, many=True)
             return Response(serializer.data, status=200)
         else:
@@ -257,9 +255,9 @@ class IntershalaSkillViewSets(generics.ListCreateAPIView):
 
     def create(self, request, *args, **kwargs):
         if self.request.user.is_employee or self.request.user.is_superuser or self.request.user.is_admin or self.request.user.is_recruiter:
-            serializer = IntershalaSkillReadSerializer(data=request.data)
+            serializer = IntershalaWriteSerializer(data=request.data)
             if serializer.is_valid(raise_exception=True):
-                serializer.save(active=True)
+                serializer.save(user=self.request.user, active=True)
                 return Response(serializer.data, status=200)
             else:
                 return Response(serializer.errors, status=400)
@@ -289,7 +287,7 @@ class IntershalaSkillUpdateViewSets(generics.RetrieveUpdateDestroyAPIView):
             if self.request.user.is_admin or self.request.user.is_employee or self.request.user.is_superuser or self.request.user.is_recruiter:
                 try:
                     queryset = Skill.objects.get(id=self.kwargs["id"])
-                    serializer = self.get_serializer(queryset, data=self.request.data, partial=True)
+                    serializer = IntershalaWriteSerializer(queryset, data=self.request.data, partial=True)
                     if serializer.is_valid(raise_exception=True):
                         serializer.save(updated_at=datetime.now())
                         return Response(serializer.data, status=200)
