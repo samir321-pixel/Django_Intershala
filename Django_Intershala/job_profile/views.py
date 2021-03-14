@@ -7,10 +7,10 @@ import datetime
 from rest_framework.filters import SearchFilter
 from recruiter.models import Recruiter
 from student.models import StudentApplication
-
 from student.models import StudentNotification
-
 from student.models import Student
+
+from intershala_admin.models import IntershalaCompany
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
@@ -127,6 +127,7 @@ class StudentApplicationsViewSet(generics.RetrieveUpdateAPIView):
                 instance = StudentApplication.objects.get(id=self.kwargs["id"])
                 student_query = Student.objects.get(id=instance.student.id)
                 profile_query = Profile.objects.get(id=instance.profile.id)
+                company_query = IntershalaCompany.objects.get(id=profile_query.company.id)
             except ObjectDoesNotExist:
                 return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
             serializer = self.get_serializer(instance, data=self.request.data, partial=True)
@@ -134,7 +135,8 @@ class StudentApplicationsViewSet(generics.RetrieveUpdateAPIView):
                 data = serializer.save(updated_at=datetime.datetime.now())
                 if data.status == "Selected":
                     StudentNotification.selected(student=student_query, student_name=student_query.first_name,
-                                                 profile_name=profile_query.profile_name, self=self)
+                                                 profile_name=profile_query.profile_name,
+                                                 company_name=company_query.company_name, self=self)
                 return Response(serializer.data)
             else:
                 return Response(serializer.errors, status=401)
