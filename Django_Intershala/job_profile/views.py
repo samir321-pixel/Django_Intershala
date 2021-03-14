@@ -39,10 +39,11 @@ class ProfileViewSet(viewsets.ModelViewSet):
         try:
             if self.request.user.is_recruiter:
                 recruiter_query = Recruiter.objects.get(user=self.request.user.id)
+                company_query = IntershalaCompany.objects.get(id=recruiter_query.company.id)
                 if recruiter_query.active:
                     serializer = ProfileSerializer(data=self.request.data)
                     if serializer.is_valid(raise_exception=True):
-                        data = serializer.save(recruiter=recruiter_query, active=True)
+                        data = serializer.save(recruiter=recruiter_query, active=True, company=company_query)
                         recruiter_query = Recruiter.objects.get(user=self.request.user.id)
                         recruiter_query.created_profile.add(data)
                         return Response(serializer.data, status=200)
@@ -50,7 +51,8 @@ class ProfileViewSet(viewsets.ModelViewSet):
                         return Response(serializer.errors, status=401)
                 elif not recruiter_query.active:
                     return Response({"NO_ACCESS": "Access Denied"}, status=401)
-        except:
+        except Exception as e:
+            print(e)
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
 
     def update(self, request, *args, **kwargs):
