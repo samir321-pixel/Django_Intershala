@@ -11,7 +11,7 @@ from student.models import Student
 
 class IntershalaCompanyViewsets(viewsets.ModelViewSet):
     queryset = IntershalaCompany.objects.all()
-    serializer_class = IntershalaCompanySerializer
+    serializer_class = IntershalaCompanyReadSerializer
     permission_classes = [IsAuthenticated, ]
     filter_backends = [SearchFilter, ]
     search_fields = ['company_name']
@@ -27,7 +27,7 @@ class IntershalaCompanyViewsets(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         if self.request.user.is_admin or self.request.user.is_superuser:
-            serializer = self.get_serializer(data=self.request.data)
+            serializer = IntershalaCompanyWriteSerializer(data=self.request.data)
             if serializer.is_valid(raise_exception=True):
                 data = serializer.save()
                 AdminNotification.company_added(company=data)
@@ -55,7 +55,7 @@ class IntershalaCompanyViewsets(viewsets.ModelViewSet):
                     queryset = IntershalaCompany.objects.get(id=self.kwargs["id"])
                 except ObjectDoesNotExist:
                     return Response({"DOES_NOT_EXIST": "Does not exist"}, status=400)
-                serializer = self.get_serializer(queryset, data=self.request.data, partial=True)
+                serializer = IntershalaCompanyWriteSerializer(queryset, data=self.request.data, partial=True)
                 if serializer.is_valid(raise_exception=True):
                     if serializer.validated_data.get('active'):
                         AdminNotification.company_added(company=queryset)

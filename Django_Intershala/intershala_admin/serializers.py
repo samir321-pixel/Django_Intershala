@@ -19,10 +19,17 @@ class CompanyReviewSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class IntershalaCompanySerializer(serializers.ModelSerializer):
+class IntershalaCompanyWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = IntershalaCompany
         fields = '__all__'
+
+
+class IntershalaCompanyReadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IntershalaCompany
+        fields = '__all__'
+        depth = 1
 
 
 class IntershalaStudentSerializer(serializers.ModelSerializer):
