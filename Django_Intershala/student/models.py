@@ -65,6 +65,11 @@ class StudentNotification(models.Model):
     def __str__(self):
         return "{} {}".format(self.student, self.seen)
 
+    def student_register(self, student, student_name):
+        StudentNotification.objects.create(student=student,
+                                           message="Hello {}, Welcome to Intershala Update your Intershala Profile and Get hired by Recruiters.".format(
+                                               student_name))
+
     def notify_student(self, student, student_name, job_profile):
         StudentNotification.objects.create(student=student,
                                            message="Hello {}, You have successfully applied to  {}.".format(

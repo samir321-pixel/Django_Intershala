@@ -32,7 +32,8 @@ class CreateStudent(generics.CreateAPIView):
             return Response({"USER_EXISTS": "User already exists with this phone number"}, status=400)
         serializer = self.get_serializer(data=self.request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save(user=user, active=True)
+            data = serializer.save(user=user, active=True)
+            StudentNotification.student_register(self=self,student=data, student_name=data.first_name)
             return Response(serializer.data, status=201)
         else:
             return Response(serializer.errors, status=400)
@@ -107,9 +108,9 @@ class StudentApplicationViewSets(generics.ListCreateAPIView):
                 RecruiterNotification.notify_recruiter(self=self, student=student_query.first_name,
                                                        recruiter=recruiter_query,
                                                        recruiter_name=recruiter_query.first_name,
-                                                       profile=profile_query)
+                                                       profile=profile_query.profile_name)
                 StudentNotification.notify_student(self=self, student=student_query,
-                                                   student_name=student_query.first_name, job_profile=profile_query)
+                                                   student_name=student_query.first_name, job_profile=profile_query.profile_name)
                 RecruiterNotification.unseen_notification_counter(self=self)
                 StudentNotification.unseen_notification_counter(self=self)
                 return Response(serializer.data, status=200)

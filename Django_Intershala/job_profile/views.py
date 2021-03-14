@@ -6,7 +6,6 @@ from django.core.exceptions import ObjectDoesNotExist
 import datetime
 from rest_framework.filters import SearchFilter
 from recruiter.models import Recruiter
-
 from student.models import StudentApplication
 
 
@@ -14,7 +13,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileReadSerializer
     filter_backends = [SearchFilter, ]
-    search_fields = ['profile_name', 'experience', 'employment_type', 'schedule', 'location', 'recruiter__company']
+    search_fields = ('profile_name', 'experience', 'employment_type', 'schedule', 'location', 'recruiter__company')
     lookup_field = "id"
 
     def list(self, request, *args, **kwargs):
