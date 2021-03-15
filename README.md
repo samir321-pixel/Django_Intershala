@@ -1,7 +1,17 @@
 [![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=102)](https://snip-share.herokuapp.com/)&nbsp;
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-<h1 align="center">Django-Intershala</h1>
+<h1 align="center">    ____   _   __   ______   ______   ____     _____    __  __   ___       __ 
+   /  _/  / | / /  /_  __/  / ____/  / __ \   / ___/   / / / /  /   |     / / 
+   / /   /  |/ /    / /    / __/    / /_/ /   \__ \   / /_/ /  / /| |    / /  
+ _/ /   / /|  /    / /    / /___   / _, _/   ___/ /  / __  /  / ___ |   / /___
+/___/  /_/ |_/    /_/    /_____/  /_/ |_|   /____/  /_/ /_/  /_/  |_|  /_____/
+                                                                              
+    ___ 
+   /   |
+  / /| |
+ / ___ |
+/_/  |_|</h1>
 
 
 ## 	✈️ Introduction
