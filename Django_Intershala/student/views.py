@@ -9,10 +9,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.filters import SearchFilter
 from job_profile.models import Profile
 from django.db import IntegrityError
-from job_profile.serializers import ProfileSerializer
 from recruiter.notification_models import RecruiterNotification
 
 from recruiter.models import Recruiter
+
+from job_profile.models import Assessment_answer
+from job_profile.serializers import AssessmentAnswerSerializer
 
 
 class CreateStudent(generics.CreateAPIView):
@@ -33,7 +35,7 @@ class CreateStudent(generics.CreateAPIView):
         serializer = self.get_serializer(data=self.request.data)
         if serializer.is_valid(raise_exception=True):
             data = serializer.save(user=user, active=True)
-            StudentNotification.student_register(self=self,student=data, student_name=data.first_name)
+            StudentNotification.student_register(self=self, student=data, student_name=data.first_name)
             return Response(serializer.data, status=201)
         else:
             return Response(serializer.errors, status=400)
@@ -110,7 +112,8 @@ class StudentApplicationViewSets(generics.ListCreateAPIView):
                                                        recruiter_name=recruiter_query.first_name,
                                                        profile=profile_query.profile_name)
                 StudentNotification.notify_student(self=self, student=student_query,
-                                                   student_name=student_query.first_name, job_profile=profile_query.profile_name)
+                                                   student_name=student_query.first_name,
+                                                   job_profile=profile_query.profile_name)
                 RecruiterNotification.unseen_notification_counter(self=self)
                 StudentNotification.unseen_notification_counter(self=self)
                 return Response(serializer.data, status=200)
@@ -132,5 +135,27 @@ class StudentNotificationViewSets(generics.ListAPIView):
             queryset.update(seen=True)
             serializer = self.get_serializer(queryset, many=True)
             return Response(serializer.data, status=200)
+        else:
+            return Response({"NO_ACCESS": "Access Denied"}, status=401)
+
+
+class StudentAssesmentAnswerViewsets(generics.ListCreateAPIView):
+    queryset = Assessment_answer.objects.all()
+    serializer_class = AssessmentAnswerSerializer
+
+    def list(self, request, *args, **kwargs):
+        queryset = Assessment_answer.objects.all()
+        print(Student.objects.get(user=self.request.user))
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=200)
+
+    def create(self, request, *args, **kwargs):
+        if self.request.user.is_student:
+            serializer = self.get_serializer(data=self.request.data)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save(student=Student.objects.get(user=self.request.user))
+                return Response(serializer.data, status=200)
+            else:
+                return Response(serializer.errors, status=401)
         else:
             return Response({"NO_ACCESS": "Access Denied"}, status=401)

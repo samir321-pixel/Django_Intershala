@@ -12,6 +12,12 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class AssessmentAnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Assessment_answer
+        fields = '__all__'
+
+
 class ProfileReadSerializer(serializers.ModelSerializer):
     sallery = serializers.CharField(max_length=200)
 

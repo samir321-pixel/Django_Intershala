@@ -13,4 +13,5 @@ urlpatterns = [
     path('student_profile/', StudentProfile.as_view()),
     path('student_application/', StudentApplicationViewSets.as_view()),
     path('student_notification/', StudentNotificationViewSets.as_view()),
+    path('assessment_answer/', StudentAssesmentAnswerViewsets.as_view()),
 ]
