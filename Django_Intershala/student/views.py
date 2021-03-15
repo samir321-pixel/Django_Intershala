@@ -139,21 +139,17 @@ class StudentNotificationViewSets(generics.ListAPIView):
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
 
 
-class StudentAssesmentAnswerViewsets(generics.ListCreateAPIView):
+class StudentAssesmentAnswerViewsets(generics.CreateAPIView):
     queryset = Assessment_answer.objects.all()
     serializer_class = AssessmentAnswerSerializer
-
-    def list(self, request, *args, **kwargs):
-        queryset = Assessment_answer.objects.all()
-        print(Student.objects.get(user=self.request.user))
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data, status=200)
 
     def create(self, request, *args, **kwargs):
         if self.request.user.is_student:
             serializer = self.get_serializer(data=self.request.data)
             if serializer.is_valid(raise_exception=True):
-                serializer.save(student=Student.objects.get(user=self.request.user))
+                data = serializer.save(student=Student.objects.get(user=self.request.user))
+                application_query = StudentApplication.objects.get(id=self.request.data.get('application_id'))
+                application_query.answer.add(data)
                 return Response(serializer.data, status=200)
             else:
                 return Response(serializer.errors, status=401)
