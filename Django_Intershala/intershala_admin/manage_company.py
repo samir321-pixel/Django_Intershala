@@ -29,7 +29,7 @@ class IntershalaCompanyViewsets(viewsets.ModelViewSet):
         if self.request.user.is_admin or self.request.user.is_superuser:
             serializer = IntershalaCompanyWriteSerializer(data=self.request.data)
             if serializer.is_valid(raise_exception=True):
-                data = serializer.save()
+                data = serializer.save(active=True)
                 AdminNotification.company_added(company=data)
                 return Response(serializer.data, status=200)
             else:

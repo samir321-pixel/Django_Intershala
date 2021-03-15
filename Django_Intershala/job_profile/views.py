@@ -145,7 +145,7 @@ class StudentApplicationsViewSet(generics.RetrieveUpdateAPIView):
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
 
 
-class AssessmentQuestionViewsets(viewsets.ModelViewSet):
+class AssessmentQuestionViewsets(generics.ListAPIView):
     queryset = Assessment_question.objects.all().order_by('-created_at')
     serializer_class = AssessmentReadQuestionSerializer
     lookup_field = "id"
@@ -159,6 +159,12 @@ class AssessmentQuestionViewsets(viewsets.ModelViewSet):
             return Response(serializer.data)
         else:
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
+
+
+class AssessmentQuestionCreateViewsets(generics.CreateAPIView):
+    queryset = Assessment_question.objects.all().order_by('-created_at')
+    serializer_class = AssessmentWriteQuestionSerializer
+    lookup_field = "id"
 
     def perform_create(self, serializer):
         try:
