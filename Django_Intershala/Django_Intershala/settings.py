@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'intershala_admin',
     'drf_yasg',
     'feedback',
+    'qrcode',
 ]
 SITE_ID = 1
 MIDDLEWARE = [

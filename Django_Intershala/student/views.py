@@ -10,7 +10,10 @@ from rest_framework.filters import SearchFilter
 from job_profile.models import Profile
 from django.db import IntegrityError
 from recruiter.notification_models import RecruiterNotification
-
+import qrcode
+from io import BytesIO
+from django.core.files import File
+from PIL import Image, ImageDraw
 from recruiter.models import Recruiter
 
 from job_profile.models import Assessment_answer
