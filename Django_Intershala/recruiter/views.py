@@ -1,5 +1,8 @@
 from datetime import datetime
-
+import qrcode
+from io import BytesIO
+from django.core.files import File
+from PIL import Image, ImageDraw
 from user.models import User
 from .models import *
 from rest_framework.response import Response
@@ -26,6 +29,19 @@ class RecruiterSignin(generics.CreateAPIView):
                                             last_name=self.request.data['last_name'],
                                             email=self.request.data['email'],
                                             is_recruiter=False)
+            try:
+                qrcode_img = qrcode.make(self.request.data['first_name']+" recruiter")
+                canvas = Image.new('RGB', (290, 290), 'white')
+                draw = ImageDraw.Draw(canvas)
+                canvas.paste(qrcode_img)
+                username = self.request.data['first_name']
+                fname = f'intershala_code-{username}' + '.png'
+                buffer = BytesIO()
+                canvas.save(buffer, 'PNG')
+                user.qr_code.save(fname, File(buffer), save=True)
+                canvas.close()
+            except:
+                pass
         except IntegrityError:
             return Response({"RECRUITER_EXISTS": "Recruiter already exists with this Email."}, status=400)
         serializer = self.get_serializer(data=self.request.data)
