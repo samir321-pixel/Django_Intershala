@@ -8,4 +8,4 @@ class User(AbstractUser):
     is_recruiter = models.BooleanField(default=False)
     is_student = models.BooleanField(default=False)
     is_employee = models.BooleanField(default=False)
-    qr_code = models.ImageField(upload_to='qr_codes', blank=True)
+    qr_code = models.ImageField(upload_to='media/Student/qr_codes', blank=True)

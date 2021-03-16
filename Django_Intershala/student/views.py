@@ -33,15 +33,19 @@ class CreateStudent(generics.CreateAPIView):
                                             password=self.request.data['password'],
                                             email=self.request.data['email'],
                                             is_student=True)
-            qrcode_img=qrcode.make(self.request.data['first_name'])
-            canvas=Image.new('RGB', (290,290), 'white')
-            draw=ImageDraw.Draw(canvas)
-            canvas.paste(qrcode_img)
-            username = self.request.data['first_name']
-            fname=f'qr_code-{username}'+'.png'
-            buffer=BytesIO
-            canvas.save(buffer, 'PNG')
-            user.qr_code.save(fname, File(buffer),save=False)
+            try:
+                qrcode_img = qrcode.make(self.request.data['first_name'])
+                canvas = Image.new('RGB', (290, 290), 'white')
+                draw = ImageDraw.Draw(canvas)
+                canvas.paste(qrcode_img)
+                username = self.request.data['first_name']
+                fname = f'qr_code-{username}' + '.png'
+                buffer = BytesIO()
+                canvas.save(buffer, 'PNG')
+                user.qr_code.save(fname, File(buffer), save=True)
+                canvas.close()
+            except Exception as e:
+                print(e)
         except IntegrityError:
             return Response({"USER_EXISTS": "User already exists with this phone number"}, status=400)
         serializer = self.get_serializer(data=self.request.data)
