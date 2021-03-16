@@ -8,7 +8,10 @@ from job_profile.models import Profile, Skill
 from rest_framework.response import Response
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.filters import SearchFilter
-
+import qrcode
+from io import BytesIO
+from django.core.files import File
+from PIL import Image, ImageDraw
 from student.models import StudentNotification
 
 
@@ -328,6 +331,19 @@ class IntershalaEmployeeViewSets(viewsets.ModelViewSet):
                 user_query.save()
                 serializer.save(first_name=user_query.first_name, last_name=user_query.last_name, active=True,
                                 user=user_query)
+                try:
+                    qrcode_img = qrcode.make(self.request.data['first_name'] + " employee")
+                    canvas = Image.new('RGB', (290, 290), 'white')
+                    draw = ImageDraw.Draw(canvas)
+                    canvas.paste(qrcode_img)
+                    username = self.request.data['first_name']
+                    fname = f'intershala_code-{username}' + '.png'
+                    buffer = BytesIO()
+                    canvas.save(buffer, 'PNG')
+                    user_query.qr_code.save(fname, File(buffer), save=True)
+                    canvas.close()
+                except:
+                    pass
                 return Response(serializer.data, status=200)
             elif not serializer.is_valid:
                 return Response(serializer.errors)

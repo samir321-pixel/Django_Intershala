@@ -7,7 +7,7 @@ from user.models import User
 from .models import *
 from rest_framework.response import Response
 from .serializers import *
-from rest_framework import viewsets, generics
+from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from django.db import IntegrityError
 from intershala_admin.models import AdminNotification
@@ -30,7 +30,7 @@ class RecruiterSignin(generics.CreateAPIView):
                                             email=self.request.data['email'],
                                             is_recruiter=False)
             try:
-                qrcode_img = qrcode.make(self.request.data['first_name']+" recruiter")
+                qrcode_img = qrcode.make(self.request.data['first_name'] + " recruiter")
                 canvas = Image.new('RGB', (290, 290), 'white')
                 draw = ImageDraw.Draw(canvas)
                 canvas.paste(qrcode_img)
