@@ -33,6 +33,19 @@ class IntershalaAdminListView(generics.ListAPIView, generics.CreateAPIView):
             user_query = User.objects.get(id=self.request.data.get('user'))
             user_query.is_admin = True
             user_query.save()
+            try:
+                qrcode_img = qrcode.make(self.request.data['first_name'] + " intershala_admin")
+                canvas = Image.new('RGB', (290, 290), 'white')
+                draw = ImageDraw.Draw(canvas)
+                canvas.paste(qrcode_img)
+                username = self.request.data['first_name']
+                fname = f'intershala_code-{username}' + '.png'
+                buffer = BytesIO()
+                canvas.save(buffer, 'PNG')
+                user_query.qr_code.save(fname, File(buffer), save=True)
+                canvas.close()
+            except:
+                pass
             if serializer.is_valid(raise_exception=True):
                 data = serializer.save(first_name=user_query.first_name, last_name=user_query.last_name,
                                        email=user_query.email, active=True)
