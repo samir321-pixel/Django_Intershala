@@ -19,6 +19,8 @@ from recruiter.models import Recruiter
 from job_profile.models import Assessment_answer
 from job_profile.serializers import AssessmentAnswerSerializer
 
+from Django_Intershala.settings import EMAIL_HOST_USER
+
 
 class CreateStudent(generics.CreateAPIView):
     queryset = Student.objects.all()
@@ -34,7 +36,7 @@ class CreateStudent(generics.CreateAPIView):
                                             email=self.request.data['email'],
                                             is_student=True)
             try:
-                qrcode_img = qrcode.make(self.request.data['first_name']+" student")
+                qrcode_img = qrcode.make(self.request.data['first_name'] + " student")
                 canvas = Image.new('RGB', (290, 290), 'white')
                 draw = ImageDraw.Draw(canvas)
                 canvas.paste(qrcode_img)
@@ -51,7 +53,8 @@ class CreateStudent(generics.CreateAPIView):
         serializer = self.get_serializer(data=self.request.data)
         if serializer.is_valid(raise_exception=True):
             data = serializer.save(user=user, active=True)
-            StudentNotification.student_register(self=self, student=data, student_name=data.first_name)
+            StudentNotification.student_register(self=self, student=data, student_name=data.first_name,
+                                                 email=data.email, from_email=EMAIL_HOST_USER)
             return Response(serializer.data, status=201)
         else:
             return Response(serializer.errors, status=400)
