@@ -132,7 +132,9 @@ class StudentApplicationViewSets(generics.ListCreateAPIView):
                                                        profile=profile_query.profile_name)
                 StudentNotification.notify_student(self=self, student=student_query,
                                                    student_name=student_query.first_name,
-                                                   job_profile=profile_query.profile_name)
+                                                   job_profile=profile_query.profile_name, from_email=EMAIL_HOST_USER,
+                                                   email=student_query.email)
+
                 RecruiterNotification.unseen_notification_counter(self=self)
                 StudentNotification.unseen_notification_counter(self=self)
                 return Response(serializer.data, status=200)

@@ -2,6 +2,7 @@ from django.db import models
 from phone_field import PhoneField
 from localflavor.in_.models import INStateField
 from django.core.mail import send_mail
+
 GENDER_CHOICES = (
     ("Male", "Male"),
     ("Female", "Female"),
@@ -73,16 +74,23 @@ class StudentNotification(models.Model):
 
     def student_register(self, student, student_name, email, from_email):
         subject = "Registered Successful"
-        message = "Hello {}, Welcome to Intershala Update your Intershala Profile and Get hired by Recruiters.".format(student_name)
+        message = "Hello {}, Welcome to Intershala Update your Intershala Profile and Get hired by Recruiters.".format(
+            student_name)
         try:
             send_mail(subject, message, from_email, [email])
         except Exception as e:
-            print(e)
+            pass
         StudentNotification.objects.create(student=student,
                                            message="Hello {}, Welcome to Intershala Update your Intershala Profile and Get hired by Recruiters.".format(
                                                student_name))
 
-    def notify_student(self, student, student_name, job_profile):
+    def notify_student(self, student, student_name, job_profile, email, from_email):
+        subject = "Applied Successfully!"
+        message = "Hello {}, You have successfully applied to  {}.".format(student_name, job_profile)
+        try:
+            send_mail(subject, message, from_email, [email])
+        except Exception as e:
+            pass
         StudentNotification.objects.create(student=student,
                                            message="Hello {}, You have successfully applied to  {}.".format(
                                                student_name, job_profile))
