@@ -107,6 +107,11 @@ class EmployeeNotification(models.Model):
     def __str__(self):
         return "{} {}".format(self.employee, self.text)
 
+    def employee_removed(employee, employee_name):
+        EmployeeNotification.objects.create(employee=employee,
+                                            text="Hello {}, sorry to let u know that You are no more employee at intershala.".format(
+                                                employee_name))
+
 
 class AdminNotification(models.Model):
     text = models.TextField()
