@@ -27,12 +27,26 @@ class RecruiterNotification(models.Model):
                                              message="Hello {}, {} applied for {} profile. ".format(recruiter_name,
                                                                                                     student, profile))
 
-    def allow_recruiter(self, recruiter, recruiter_name,email, from_email):
+    def allow_recruiter(self, recruiter, recruiter_name, email, from_email):
+        subject = "Registered Successful"
+        message = "Hello {}, Congratulations you are now allow to post job profile and start hiring.".format(
+            recruiter_name)
+        try:
+            send_mail(subject, message, from_email, [email])
+        except Exception as e:
+            pass
         RecruiterNotification.objects.create(recruiter=recruiter,
                                              message="Hello {}, Congratulations you are now allow to post job profile and start hiring.".format(
                                                  recruiter_name, updated_at=datetime.now()))
 
-    def denied_recruiter(self, recruiter, recruiter_name):
+    def denied_recruiter(self, recruiter, recruiter_name, email, from_email):
+        subject = "Registered Successful"
+        message = "Hello {}, Sorry to let you know but you are not allow to post job profile so all the job profiles you created will be removed. please contact Intershala Admin.".format(
+            recruiter_name)
+        try:
+            send_mail(subject, message, from_email, [email])
+        except Exception as e:
+            pass
         RecruiterNotification.objects.create(recruiter=recruiter,
                                              message="Hello {}, Sorry to let you know but you are not allow to post job profile so all the job profiles you created will be removed. please contact Intershala Admin.".format(
                                                  recruiter_name, updated_at=datetime.now()))

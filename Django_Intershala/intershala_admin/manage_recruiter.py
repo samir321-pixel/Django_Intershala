@@ -1,4 +1,4 @@
-`from datetime import datetime
+from datetime import datetime
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from .serializers import *
@@ -66,7 +66,8 @@ class IntershalaRecruiterUpdateView(generics.RetrieveUpdateDestroyAPIView):
                             serializer.save(updated_at=datetime.now(), active=True)
                         elif not serializer.validated_data.get('active'):
                             RecruiterNotification.denied_recruiter(self=self, recruiter=queryset,
-                                                                   recruiter_name=queryset.first_name)
+                                                                   recruiter_name=queryset.first_name,
+                                                                   email=queryset.email, from_email=EMAIL_HOST_USER)
                             for i in Profile.objects.filter(recruiter=queryset):
                                 i.active = False
                                 i.save()
@@ -98,4 +99,3 @@ class IntershalaRecruiterUpdateView(generics.RetrieveUpdateDestroyAPIView):
             return Response({"Recruiter Deactivated": "Access Granted"}, status=200)
         else:
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
-`
