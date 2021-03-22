@@ -101,7 +101,14 @@ class StudentNotification(models.Model):
             i.unseen_notification = count
             i.save()
 
-    def removed_student(self, student, student_name, ):
+    def removed_student(self, student, student_name, email, from_email):
+        subject = "Applied Successfully!"
+        message = "Hello {}, Sorry to inform you but your profile has been deactivated from intershala as u have didnt follow intershala rules and regulation. please contact intershala admin support.".format(
+            student_name)
+        try:
+            send_mail(subject, message, from_email, [email])
+        except Exception as e:
+            pass
         StudentNotification.objects.create(student=student,
                                            message="Hello {}, Sorry to inform you but your profile has been deactivated from intershala as u have didnt follow intershala rules and regulation. please contact intershala admin support.".format(
                                                student_name))

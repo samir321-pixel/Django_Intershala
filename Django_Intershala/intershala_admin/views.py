@@ -13,6 +13,7 @@ from io import BytesIO
 from django.core.files import File
 from PIL import Image, ImageDraw
 from student.models import StudentNotification
+from Django_Intershala.settings import EMAIL_HOST_USER
 
 
 class IntershalaAdminListView(generics.ListAPIView, generics.CreateAPIView):
@@ -166,7 +167,8 @@ class IntershalaStudentUpdateViewSets(generics.RetrieveUpdateDestroyAPIView):
                             serializer.save(updated_at=datetime.now(), active=True)
                         elif not serializer.validated_data.get('active'):
                             StudentNotification.removed_student(self=self, student=queryset,
-                                                                student_name=queryset.first_name)
+                                                                student_name=queryset.first_name,
+                                                                from_email=EMAIL_HOST_USER, email=queryset.email)
                             user_query = User.objects.get(id=queryset.user.id)
                             user_query.is_student = False
                             user_query.save()
