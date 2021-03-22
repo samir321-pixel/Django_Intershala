@@ -190,7 +190,7 @@ class IntershalaStudentUpdateViewSets(generics.RetrieveUpdateDestroyAPIView):
             instance.active = False
             instance.save()
             StudentNotification.removed_student(self=self, student=instance,
-                                                student_name=instance.first_name)
+                                                student_name=instance.first_name, from_email=EMAIL_HOST_USER, email=instance.email)
             user_query = User.objects.get(id=instance.user.id)
             user_query.is_student = False
             user_query.save()
