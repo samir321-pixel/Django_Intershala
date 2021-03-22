@@ -160,7 +160,8 @@ class IntershalaStudentUpdateViewSets(generics.RetrieveUpdateDestroyAPIView):
                     if serializer.is_valid(raise_exception=True):
                         if serializer.validated_data.get('active'):
                             StudentNotification.updated_student(self=self, student=queryset,
-                                                                student_name=queryset.first_name)
+                                                                student_name=queryset.first_name,
+                                                                from_email=EMAIL_HOST_USER, email=queryset.email)
                             user_query = User.objects.get(id=queryset.user.id)
                             user_query.is_student = True
                             user_query.save()
@@ -190,7 +191,8 @@ class IntershalaStudentUpdateViewSets(generics.RetrieveUpdateDestroyAPIView):
             instance.active = False
             instance.save()
             StudentNotification.removed_student(self=self, student=instance,
-                                                student_name=instance.first_name, from_email=EMAIL_HOST_USER, email=instance.email)
+                                                student_name=instance.first_name, from_email=EMAIL_HOST_USER,
+                                                email=instance.email)
             user_query = User.objects.get(id=instance.user.id)
             user_query.is_student = False
             user_query.save()
