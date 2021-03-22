@@ -129,7 +129,8 @@ class StudentApplicationViewSets(generics.ListCreateAPIView):
                 RecruiterNotification.notify_recruiter(self=self, student=student_query.first_name,
                                                        recruiter=recruiter_query,
                                                        recruiter_name=recruiter_query.first_name,
-                                                       profile=profile_query.profile_name)
+                                                       profile=profile_query.profile_name, from_email=EMAIL_HOST_USER,
+                                                       email=recruiter_query.email)
                 StudentNotification.notify_student(self=self, student=student_query,
                                                    student_name=student_query.first_name,
                                                    job_profile=profile_query.profile_name, from_email=EMAIL_HOST_USER,

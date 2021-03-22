@@ -1,6 +1,7 @@
 from datetime import datetime
 from django.db import models
 from .models import *
+from django.core.mail import send_mail
 
 
 class RecruiterNotification(models.Model):
@@ -14,7 +15,14 @@ class RecruiterNotification(models.Model):
     def __str__(self):
         return "{}".format(self.recruiter)
 
-    def notify_recruiter(self, student, recruiter, recruiter_name, profile):
+    def notify_recruiter(self, student, recruiter, recruiter_name, profile, email, from_email):
+        subject = "Registered Successful"
+        message = "Hello {}, {} applied for {} profile. ".format(
+            recruiter_name, student, profile)
+        try:
+            send_mail(subject, message, from_email, [email])
+        except Exception as e:
+            pass
         RecruiterNotification.objects.create(recruiter=recruiter,
                                              message="Hello {}, {} applied for {} profile. ".format(recruiter_name,
                                                                                                     student, profile))
@@ -34,4 +42,3 @@ class RecruiterNotification(models.Model):
             count = RecruiterNotification.objects.filter(recruiter=i, seen=False).count()
             i.unseen_notification = count
             i.save()
-
