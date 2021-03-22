@@ -4,6 +4,7 @@ from localflavor.in_.models import INStateField
 from djmoney.models.fields import MoneyField
 from django.core.validators import MinValueValidator, MaxValueValidator
 from recruiter.models import Recruiter
+from django.core.mail import send_mail
 
 gender_choices = (
     ("Male", "Male"),
@@ -107,7 +108,14 @@ class EmployeeNotification(models.Model):
     def __str__(self):
         return "{} {}".format(self.employee, self.text)
 
-    def employee_removed(employee, employee_name):
+    def employee_removed(employee, employee_name, email, from_email):
+        subject = "Thanks to be part of intershala!"
+        message = "Hello {}, sorry to let u know that You are no more employee at intershala.".format(
+            employee_name)
+        try:
+            send_mail(subject, message, from_email, [email])
+        except Exception as e:
+            pass
         EmployeeNotification.objects.create(employee=employee,
                                             text="Hello {}, sorry to let u know that You are no more employee at intershala.".format(
                                                 employee_name))

@@ -16,7 +16,7 @@ class RecruiterNotification(models.Model):
         return "{}".format(self.recruiter)
 
     def notify_recruiter(self, student, recruiter, recruiter_name, profile, email, from_email):
-        subject = "Registered Successful"
+        subject = "Student Applied"
         message = "Hello {}, {} applied for {} profile. ".format(
             recruiter_name, student, profile)
         try:
@@ -28,7 +28,7 @@ class RecruiterNotification(models.Model):
                                                                                                     student, profile))
 
     def allow_recruiter(self, recruiter, recruiter_name, email, from_email):
-        subject = "Registered Successful"
+        subject = "Promoted!"
         message = "Hello {}, Congratulations you are now allow to post job profile and start hiring.".format(
             recruiter_name)
         try:
@@ -40,7 +40,7 @@ class RecruiterNotification(models.Model):
                                                  recruiter_name, updated_at=datetime.now()))
 
     def denied_recruiter(self, recruiter, recruiter_name, email, from_email):
-        subject = "Registered Successful"
+        subject = "Thanks to be part of intershala!"
         message = "Hello {}, Sorry to let you know but you are not allow to post job profile so all the job profiles you created will be removed. please contact Intershala Admin.".format(
             recruiter_name)
         try:
