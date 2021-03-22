@@ -27,7 +27,7 @@ class RecruiterNotification(models.Model):
                                              message="Hello {}, {} applied for {} profile. ".format(recruiter_name,
                                                                                                     student, profile))
 
-    def allow_recruiter(self, recruiter, recruiter_name):
+    def allow_recruiter(self, recruiter, recruiter_name,email, from_email):
         RecruiterNotification.objects.create(recruiter=recruiter,
                                              message="Hello {}, Congratulations you are now allow to post job profile and start hiring.".format(
                                                  recruiter_name, updated_at=datetime.now()))

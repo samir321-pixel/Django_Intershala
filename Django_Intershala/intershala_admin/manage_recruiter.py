@@ -1,4 +1,4 @@
-from datetime import datetime
+`from datetime import datetime
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from .serializers import *
@@ -10,6 +10,8 @@ from user.models import User
 from recruiter.notification_models import RecruiterNotification
 
 from job_profile.models import Profile
+
+from Django_Intershala.settings import EMAIL_HOST_USER
 
 
 class IntershalaRecruiterListView(generics.ListAPIView):
@@ -56,7 +58,8 @@ class IntershalaRecruiterUpdateView(generics.RetrieveUpdateDestroyAPIView):
                     if serializer.is_valid(raise_exception=True):
                         if serializer.validated_data.get('active'):
                             RecruiterNotification.allow_recruiter(self=self, recruiter=queryset,
-                                                                  recruiter_name=queryset.first_name)
+                                                                  recruiter_name=queryset.first_name,
+                                                                  from_email=EMAIL_HOST_USER, email=queryset.email)
                             user_query = User.objects.get(id=queryset.user.id)
                             user_query.is_recruiter = True
                             user_query.save()
@@ -95,3 +98,4 @@ class IntershalaRecruiterUpdateView(generics.RetrieveUpdateDestroyAPIView):
             return Response({"Recruiter Deactivated": "Access Granted"}, status=200)
         else:
             return Response({"NO_ACCESS": "Access Denied"}, status=401)
+`
