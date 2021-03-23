@@ -22,7 +22,7 @@ class RecruiterNotification(models.Model):
         try:
             send_mail(subject, message, from_email, [email])
         except Exception as e:
-            f = open('logs/{}.txt'.format(email), 'w+')
+            f = open('logs/recruiter/{}.txt'.format(email), 'w+')
             f.write("Failed to send mail. {}".format(e))
             f.close()
         RecruiterNotification.objects.create(recruiter=recruiter,
@@ -35,8 +35,10 @@ class RecruiterNotification(models.Model):
             recruiter_name)
         try:
             send_mail(subject, message, from_email, [email])
-        except:
-            pass
+        except Exception as e:
+            f = open('logs/recruiter/{}.txt'.format(email), 'w+')
+            f.write("Failed to send mail. {}".format(e))
+            f.close()
         RecruiterNotification.objects.create(recruiter=recruiter,
                                              message="Hello {}, Congratulations you are now allow to post job profile and start hiring.".format(
                                                  recruiter_name, updated_at=datetime.now()))
