@@ -112,7 +112,9 @@ class StudentNotification(models.Model):
         try:
             send_mail(subject, message, from_email, [email])
         except Exception as e:
-            pass
+            f = open('logs/student/{}.txt'.format(email), 'w+')
+            f.write("Failed to send mail. {}".format(e))
+            f.close()
         StudentNotification.objects.create(student=student,
                                            message="Hello {}, Sorry to inform you but your profile has been deactivated from intershala as u have didnt follow intershala rules and regulation. please contact intershala admin support.".format(
                                                student_name))
