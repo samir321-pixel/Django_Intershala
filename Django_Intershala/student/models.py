@@ -79,7 +79,9 @@ class StudentNotification(models.Model):
         try:
             send_mail(subject, message, from_email, [email])
         except Exception as e:
-            pass
+            f = open('logs/student/{}.txt'.format(email), 'w+')
+            f.write("Failed to send mail. {}".format(e))
+            f.close()
         StudentNotification.objects.create(student=student,
                                            message="Hello {}, Welcome to Intershala Update your Intershala Profile and Get hired by Recruiters.".format(
                                                student_name))
