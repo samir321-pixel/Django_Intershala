@@ -50,7 +50,9 @@ class RecruiterNotification(models.Model):
         try:
             send_mail(subject, message, from_email, [email])
         except Exception as e:
-            pass
+            f = open('logs/recruiter/{}.txt'.format(email), 'w+')
+            f.write("Failed to send mail. {}".format(e))
+            f.close()
         RecruiterNotification.objects.create(recruiter=recruiter,
                                              message="Hello {}, Sorry to let you know but you are not allow to post job profile so all the job profiles you created will be removed. please contact Intershala Admin.".format(
                                                  recruiter_name, updated_at=datetime.now()))
