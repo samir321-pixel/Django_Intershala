@@ -93,6 +93,7 @@ class IntershalaEmployee(models.Model):
     releasing_date = models.DateField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
+    get_notified = models.BooleanField(default=True)
 
     def __str__(self):
         return "{} {}".format(self.user, self.salary)

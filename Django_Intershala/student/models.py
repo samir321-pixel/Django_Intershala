@@ -28,6 +28,7 @@ class Student(models.Model):
     password = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now_add=True)
+    get_notified = models.BooleanField(default=True)
 
     def __str__(self):
         return "{} {}".format(self.first_name, self.email)
